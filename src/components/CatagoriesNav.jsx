@@ -8,7 +8,7 @@ const CatagoriesNav = ({cetgories, selectCategory, setSelectCategory}) => {
         <button 
         key={cat}
         onClick={()=> setSelectCategory(cat)}
-        className={`px-4 py-2 rounded-full font-medium transition-all duration-300
+        className={`px-4 py-2 sm:px-2 sm:py-1 rounded-full font-medium transition-all duration-300
            ${selectCategory === cat ? "bg-[#ad191b] text-white" : "border border-red-500 text-[#ad191b] hover:bg-[#ad191b] hover:text-white"} 
             
             `}
