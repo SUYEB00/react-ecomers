@@ -14,7 +14,7 @@ const ProductCard = ({products}) => {
                 {products.title}
             </h3>
             <div className='flex text-[#f6a355]'><FaStar/> <FaStar/> <FaStar/> <FaStar/> <FaRegStarHalfStroke/></div>
-            <p className='flex gap-2'><div className='line-through'>{products.withoutdis}</div> <strong>{products.price}</strong>  BDT</p>
+            <p className='flex gap-2 mb-6'><div className='line-through'>{products.withoutdis}</div> <strong>{products.price}</strong>  BDT</p>
         </div>
      </div>
     </div>

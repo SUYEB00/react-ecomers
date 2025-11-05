@@ -27,7 +27,7 @@ export default function Carousel() {
       loop={true}
       spaceBetween={20}
       slidesPerView={1}
-      className="mySwiper w-full h-[60vh] md:h-[70vh] lg:h-[80vh] "
+      className="mySwiper w-full  md:h-[70vh] lg:h-[80vh] "
     >
       {slides.map((image, index) => (
         <SwiperSlide key={index}>

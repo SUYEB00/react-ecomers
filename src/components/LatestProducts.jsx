@@ -19,7 +19,7 @@ export default function LatestProducts() {
   }, []);
 
   return (
-    <div className=" max-full mx-auto w-11/12">
+    <div className=" max-full mx-auto w-11/12 mb-3">
       <h2 className="text-2xl font-mon font-bold mb-5 text-center text-[#ff8f9c]">Latest Products</h2>
 
       <Swiper
@@ -46,7 +46,7 @@ export default function LatestProducts() {
                             {product.title}
                         </h3>
                         <div className='flex text-[#f6a355]'><FaStar/> <FaStar/> <FaStar/> <FaStar/> <FaRegStarHalfStroke/></div>
-                        <p className='flex gap-2'><div className='line-through'>{product.withoutdis}</div> <strong>{product.price}</strong>  BDT</p>
+                        <p className='flex gap-2 mb-3'><div className='line-through'>{product.withoutdis}</div> <strong>{product.price}</strong>  BDT</p>
                     </div>
                  </div>
                 </div>

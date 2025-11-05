@@ -25,7 +25,7 @@ export default function Navbar() {
       </ul>
     </div>
     <div className='flex items-center gap-10'>
-        <a className="text-3xl font-pop">TRENDZONE</a>
+        <a className="lg:text-3xl sm:text-2xl font-pop">TRENDZONE</a>
         <div className="navbar-center hidden lg:flex">
     <ul className="flex gap-6">
       {link}
