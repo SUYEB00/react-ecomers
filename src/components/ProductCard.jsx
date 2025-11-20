@@ -10,7 +10,7 @@ const ProductCard = ({products}) => {
      />
      <div className='flex p-2'>
         <div>
-            <h3 className='text-[#21214c] fonr-mon'>
+            <h3 className='text-[#21214c] font-mon'>
                 {products.title}
             </h3>
             <div className='flex text-[#f6a355]'><FaStar/> <FaStar/> <FaStar/> <FaStar/> <FaRegStarHalfStroke/></div>

@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
+import toast from "react-hot-toast";
 import "swiper/css";
 import "swiper/css/pagination";
 import { FaStar } from "react-icons/fa";
@@ -15,12 +16,15 @@ export default function LatestProducts() {
     fetch("/Products.json") // your JSON file path or API
       .then((res) => res.json())
       .then((data) => setProducts(data))
-      .catch((err) => console.error(err));
+      .catch((error) => {
+        console.log(error);
+         toast.error("Failed to load product data. Please try again.");
+      })
   }, []);
 
   return (
     <div className=" max-full mx-auto w-11/12 mb-3">
-      <h2 className="text-2xl font-mon font-bold mb-5 text-center text-[#ff8f9c]">
+      <h2 className="text-2xl font-pop font-bold mb-5 text-center text-[#ff8f9c]">
         Latest Products
       </h2>
 

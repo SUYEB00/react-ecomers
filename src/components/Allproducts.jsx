@@ -15,7 +15,7 @@ const Allproducts = () => {
       .then((data) => setProducts(data))
       .catch((error) => {
         console.log(error);
-        toast.error("Failed to products Data!!!");
+         toast.error("Failed to load product data. Please try again.");
       })
       .finally(() => setLoading(false));
   }, []);
@@ -57,7 +57,7 @@ const Allproducts = () => {
           )}
         </>
       ) : (
-        <p className="text-[#ad191b] text-center">No Products Found</p>
+        <p className="text-[#ad191b] font-semibold font-pop text-center">No Products Found</p>
       )}
     </div>
   );
