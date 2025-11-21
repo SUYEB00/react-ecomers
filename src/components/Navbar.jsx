@@ -85,11 +85,11 @@ export default function Navbar() {
       <path d="m21 21-4.3-4.3"></path>
     </g>
   </svg>
-  <input type="search" required placeholder="Search" className='bg-transparent outline-none text-sm text-[#202020] placeholder-[#202020] w-10 md:w-40  sm:flex'/>
+  <input type="search" required placeholder="Search" className='bg-transparent outline-none text-sm text-[#202020] placeholder-[#202020] w-15 md:w-40  sm:flex'/>
 </label>
 <div className="relative flex-none">
      
-      <div className="text-3xl cursor-pointer" onClick={handleIconClick}>
+      <div className="text-2xl md:text-3xl lg:text-3xl cursor-pointer" onClick={handleIconClick}>
         <IoPersonOutline />
       </div>
 
