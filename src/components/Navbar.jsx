@@ -50,7 +50,7 @@ export default function Navbar() {
 
   return (
     <div className="navbar shadow-md #faf6f1 backdrop-blur-md text-[#202020] fixed top-0 left-0 right-0 z-100 font-mon">
- <div className='w-10/12 md:w-11/12 lg:w-11/12 mx-auto flex justify-between items-center'>
+ <div className='px-3 md:w-11/12 lg:w-11/12 mx-auto flex justify-between items-center'>
      <div className="navbar-start">
     <div className="dropdown">
       <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
