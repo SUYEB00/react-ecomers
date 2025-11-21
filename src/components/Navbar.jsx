@@ -11,7 +11,8 @@ export default function Navbar() {
    const [showPopup, setShowPopup] = useState(false);
    const navigate = useNavigate();
    const adminEmail = "suaibhasan00@gmail.com";
-
+   const [isAdmin, setIsAdmin] = useState(false);
+   
     const link = (
         <>
         <li>Home</li>
@@ -21,18 +22,24 @@ export default function Navbar() {
         </>
     )
 
-  // This keeps user logged in on refresh
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (!user) {
-        navigate("/");
-      } else {
-        setUser(user);
-      }
-    });
+// This keeps user logged in on refresh
+useEffect(() => {
+  const unsubscribe = auth.onAuthStateChanged((user) => {
+    if (!user) {
+      navigate("/");
+    } else {
+      setUser(user);
 
-    return unsubscribe;
-  }, [navigate]);
+      if (user.email === adminEmail) {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+      }
+    }
+  });
+
+  return unsubscribe;
+}, [navigate]);
 
   const handleIconClick = () => {
     if (!user) {
@@ -104,6 +111,13 @@ export default function Navbar() {
             Logout
           </button>
         </div>
+   
+   {isAdmin && (
+  <button onClick={() => navigate("/addproducts")}>
+    Admin Panel
+  </button>
+    )}
+
       )}
     </div>
   </div>
