@@ -19,15 +19,19 @@ const Allproducts = () => {
         id: doc.id,
         ...doc.data()
       }));
+
       setProducts(data);
     } catch (error) {
       console.log(error);
       toast.error("Failed to load product data. Please try again.");
+    } finally {
+      setLoading(false); // ← very important
     }
   };
 
   fetchProducts();
 }, []);
+
 
   const cetgories = ["All", ...new Set(products.map((m) => m.category))];
   const filterproducts =
