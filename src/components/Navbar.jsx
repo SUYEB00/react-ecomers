@@ -71,7 +71,7 @@ export default function Navbar() {
   </div>
     </div>
   </div>
-  <div className="navbar-end flex gap-6">
+  <div className="navbar-end flex gap-2 md:gap-6 lg:gap-6">
     <label className="flex items-center gap-2 bg-white/10 rounded-full px-3 py-2 border border-[#D1D5DC]">
   <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"> 
     <g
