@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import CatagoriesNav from "./CatagoriesNav";
 import toast from "react-hot-toast";
 import ProductCard from "./ProductCard";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase"; 
 
 const Allproducts = () => {
   const [products, setProducts] = useState([]);
@@ -10,15 +12,22 @@ const Allproducts = () => {
   const [showAll, setShowall] = useState(false);
 
   useEffect(() => {
-    fetch("/Products.json")
-      .then((res) => res.json())
-      .then((data) => setProducts(data))
-      .catch((error) => {
-        console.log(error);
-         toast.error("Failed to load product data. Please try again.");
-      })
-      .finally(() => setLoading(false));
-  }, []);
+  const fetchProducts = async () => {
+    try {
+      const snapshot = await getDocs(collection(db, "Products"));
+      const data = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setProducts(data);
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to load product data. Please try again.");
+    }
+  };
+
+  fetchProducts();
+}, []);
 
   const cetgories = ["All", ...new Set(products.map((m) => m.category))];
   const filterproducts =
