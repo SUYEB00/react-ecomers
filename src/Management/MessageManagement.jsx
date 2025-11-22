@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function AdminMessages() {
   const [messages, setMessages] = useState([]);
@@ -34,6 +34,7 @@ export default function AdminMessages() {
 
   return (
     <div className="w-11/12 mx-auto mt-10 font-pop">
+      <Toaster position="top-right" />
       <h1 className="text-3xl font-bold text-center text-[#ff8f9c] mb-6">
         Message Management
       </h1>

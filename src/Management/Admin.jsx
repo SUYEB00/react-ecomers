@@ -7,7 +7,7 @@ import {
   doc,
 } from "firebase/firestore";
 import { db } from "../firebase";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const AddProduct = () => {
@@ -21,6 +21,11 @@ const AddProduct = () => {
     category: "",
   });
 
+  // SLIDER STATE
+  const [slider, setSlider] = useState({
+    slider_img: "",
+  });
+
   // PAYMENT METHOD STATE
   const [payment, setPayment] = useState({
     payment_type: "",
@@ -28,6 +33,7 @@ const AddProduct = () => {
   });
 
   const [productsList, setProductsList] = useState([]);
+  const [sliderList, setSliderList] = useState([]);
   const [paymentList, setPaymentList] = useState([]);
 
   // INPUT HANDLERS
@@ -35,8 +41,28 @@ const AddProduct = () => {
     setProduct({ ...product, [e.target.name]: e.target.value });
   };
 
+  const handleSliderChange = (e) => {
+    setSlider({ ...slider, [e.target.name]: e.target.value });
+  };
+
   const handlePaymentChange = (e) => {
     setPayment({ ...payment, [e.target.name]: e.target.value });
+  };
+
+  // ADD SLIDER
+  const handleSliderSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await addDoc(collection(db, "Sliders"), slider);
+      toast.success("Slider Added!");
+
+      setPayment({ slider_img: "" });
+      fetchSlider();
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to add Slider");
+    }
   };
 
   // ADD PAYMENT METHOD
@@ -88,6 +114,16 @@ const AddProduct = () => {
     setProductsList(items);
   };
 
+  // FETCH SLIDER
+  const fetchSlider = async () => {
+    const querySnapshot = await getDocs(collection(db, "Sliders"));
+    const items = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setSliderList(items);
+  };
+
   // FETCH PAYMENT METHODS
   const fetchPaymentMethods = async () => {
     const querySnapshot = await getDocs(collection(db, "PaymentMethods"));
@@ -100,6 +136,7 @@ const AddProduct = () => {
 
   useEffect(() => {
     fetchProducts();
+    fetchSlider();
     fetchPaymentMethods();
   }, []);
 
@@ -108,6 +145,13 @@ const AddProduct = () => {
     await deleteDoc(doc(db, "Products", id));
     toast.success("Product deleted!");
     setProductsList(productsList.filter((item) => item.id !== id));
+  };
+
+  // DELETE SLIDER
+  const deleteSlider = async (id) => {
+    await deleteDoc(doc(db, "Sliders", id));
+    toast.success("Slider deleted!");
+    setPaymentList(sliderList.filter((item) => item.id !== id));
   };
 
   // DELETE PAYMENT METHOD
@@ -119,8 +163,9 @@ const AddProduct = () => {
 
   return (
     <div className="w-11/12 mx-auto font-mon mt-10">
+      <Toaster position="top-right" />
       {/* Order Management */}
-      <h2 className="text-2xl font-bold mb-5">Order Management</h2>
+      <h2 className="text-2xl font-bold mb-5">1. Order Management</h2>
       <button
         onClick={() => navigate("/ordermanagement")}
         className="px-4 py-2 bg-red-500 text-white rounded mb-5"
@@ -129,7 +174,7 @@ const AddProduct = () => {
       </button>
 
       {/* Message Management */}
-      <h2 className="text-2xl font-bold mb-5">Message Management</h2>
+      <h2 className="text-2xl font-bold mb-5">2. Message Management</h2>
       <button
         onClick={() => navigate("/messagemanagement")}
         className="px-4 py-2 bg-red-500 text-white rounded mb-5"
@@ -138,7 +183,7 @@ const AddProduct = () => {
       </button>
 
       {/* User Management */}
-      <h2 className="text-2xl font-bold mb-5">Order Management</h2>
+      <h2 className="text-2xl font-bold mb-5">3. Order Management</h2>
       <button
         onClick={() => navigate("/usermanagement")}
         className="px-4 py-2 bg-red-500 text-white rounded mb-5"
@@ -146,8 +191,58 @@ const AddProduct = () => {
         User Management
       </button>
 
+      {/* SLIDER FORM */}
+      <h2 className="text-2xl font-bold mb-5">4. Add Slider</h2>
+
+      <form onSubmit={handleSliderSubmit} className="space-y-4">
+        <input
+          name="slider_img"
+          value={slider.slider_img}
+          onChange={handleSliderChange}
+          placeholder="Slider IMG URL"
+          className="w-full p-3 border border-gray-300 rounded-xl"
+          required
+        />
+
+        <button
+          type="submit"
+          className="px-4 py-2 bg-red-500 text-white rounded mb-5"
+        >
+          Add Slider
+        </button>
+      </form>
+
+      {/* SLIDER LIST */}
+      <h2 className="text-xl font-bold mt-5 mb-3">All Sliders</h2>
+
+      {/* TOTAL SLIDER */}
+      <div className="mb-5 text-xl font-semibold text-[#21214c]">
+        Total Sliders:{" "}
+        <span className="text-[#ff8f9c]">{sliderList.length}</span>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+        {sliderList.map((item) => (
+          <div
+            className="border p-4 rounded-xl flex justify-between items-center border-gray-300"
+            key={item.id}
+          >
+            <div>
+              <p className="font-bold mb-2">{item.slider_img}</p>
+
+              <button
+              onClick={() => deleteSlider(item.id)}
+              className="bg-red-500 text-white px-3 py-1 rounded"
+            >
+              Delete
+            </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
       {/* PAYMENT METHOD FORM */}
-      <h2 className="text-2xl font-bold mb-5">Add Payment Method</h2>
+      <h2 className="text-2xl font-bold mb-5">5. Add Payment Method</h2>
 
       <form onSubmit={handlePaymentSubmit} className="space-y-4">
         <input
@@ -207,7 +302,7 @@ const AddProduct = () => {
       </div>
 
       {/* PRODUCT FORM */}
-      <h2 className="text-2xl font-bold mb-5">Add Product</h2>
+      <h2 className="text-2xl font-bold mb-5">6. Add Product</h2>
 
       <form onSubmit={handleProductSubmit} className="space-y-4">
         <input

@@ -7,7 +7,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState([]);
@@ -55,6 +55,7 @@ export default function AdminOrders() {
 
   return (
     <div className="w-11/12 mx-auto mt-10 font-pop">
+      <Toaster position="top-right" />
       <h1 className="text-3xl font-bold text-center text-[#ff8f9c] mb-6">
         Order Management
       </h1>

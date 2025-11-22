@@ -1,21 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
 
 import "swiper/css";
 import "swiper/css/pagination";
-import "../index.css"; // keep styles here
-
-// Import images
-import slider1 from "../assets/Slider_1.png";
-import slider2 from "../assets/Slider_2.png";
-import slider3 from "../assets/Slider_3.png";
-import slider4 from "../assets/Slider_4.png";
-import slider5 from "../assets/Slider_5.png";
+import "../index.css";
 
 export default function Carousel() {
-  // Keep all images in an array
-  const slides = [slider1, slider2, slider3, slider4, slider5];
+  const [slides, setSlides] = useState([]);
+
+  // FETCH SLIDER IMAGES FROM FIRESTORE
+  const fetchSliders = async () => {
+    const querySnapshot = await getDocs(collection(db, "Sliders"));
+    const sliderImages = querySnapshot.docs.map((doc) => doc.data().slider_img);
+    setSlides(sliderImages);
+  };
+
+  useEffect(() => {
+    fetchSliders();
+  }, []);
 
   return (
     <div className="w-full">
@@ -26,7 +31,7 @@ export default function Carousel() {
         loop={true}
         spaceBetween={20}
         slidesPerView={1}
-        className="mySwiper w-full  md:h-[70vh] lg:h-[80vh] "
+        className="mySwiper w-full md:h-[70vh] lg:h-[80vh]"
       >
         {slides.map((image, index) => (
           <SwiperSlide key={index}>
