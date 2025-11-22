@@ -45,7 +45,6 @@ export default function LatestProducts() {
         slidesPerView={1}
         spaceBetween={20}
         autoplay={{ delay: 3000 }}
-        pagination={{ clickable: true }}
         breakpoints={{
           640: { slidesPerView: 3 },
           1024: { slidesPerView: 6 },
@@ -59,7 +58,7 @@ export default function LatestProducts() {
               onClick={async () => {
                 try {
                   const snap = await getDocs(collection(db, "PaymentMethods"));
-                  const paymentMethods = snap.docs.map((doc) => ({
+                  const paymentMethods = snap.docs.map((doc) > ({
                     id: doc.id,
                     ...doc.data(),
                   }));
