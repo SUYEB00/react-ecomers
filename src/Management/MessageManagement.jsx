@@ -38,6 +38,12 @@ export default function AdminMessages() {
         Message Management
       </h1>
 
+      {/* TOTAL ORDERS */}
+      <div className="mb-5 text-xl font-semibold text-[#21214c]">
+        Total Messages:{" "}
+        <span className="text-[#ff8f9c]">{messages.length}</span>
+      </div>
+
       <div className="overflow-x-auto">
         <table className="w-full border border-gray-300 rounded-xl">
           <thead>

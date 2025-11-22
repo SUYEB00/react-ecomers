@@ -137,6 +137,15 @@ const AddProduct = () => {
         Message Management
       </button>
 
+      {/* User Management */}
+      <h2 className="text-2xl font-bold mb-5">Order Management</h2>
+      <button
+        onClick={() => navigate("/usermanagement")}
+        className="px-4 py-2 bg-red-500 text-white rounded mb-5"
+      >
+        User Management
+      </button>
+
       {/* PAYMENT METHOD FORM */}
       <h2 className="text-2xl font-bold mb-5">Add Payment Method</h2>
 
@@ -169,6 +178,12 @@ const AddProduct = () => {
 
       {/* PAYMENT LIST */}
       <h2 className="text-xl font-bold mt-5 mb-3">Payment Methods</h2>
+
+      {/* TOTAL PAYMENTS METHOD */}
+      <div className="mb-5 text-xl font-semibold text-[#21214c]">
+        Total Payment Method:{" "}
+        <span className="text-[#ff8f9c]">{paymentList.length}</span>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
         {paymentList.map((item) => (
@@ -250,6 +265,12 @@ const AddProduct = () => {
 
       {/* PRODUCT LIST */}
       <h2 className="text-xl font-bold mt-10 mb-4">All Products</h2>
+
+      {/* TOTAL PRODUCTS */}
+      <div className="mb-5 text-xl font-semibold text-[#21214c]">
+        Total Products:{" "}
+        <span className="text-[#ff8f9c]">{productsList.length}</span>
+      </div>
 
       <div className="grid grid-cols-2 md:grid-cols-6 gap-6">
         {productsList.map((item) => (
