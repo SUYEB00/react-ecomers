@@ -153,7 +153,7 @@ const AddProduct = () => {
   const deleteSlider = async (id) => {
     await deleteDoc(doc(db, "Sliders", id));
     toast.success("Slider deleted!");
-    setPaymentList(sliderList.filter((item) => item.id !== id));
+    setSliderList(sliderList.filter((item) => item.id !== id));
   };
 
   // DELETE PAYMENT METHOD

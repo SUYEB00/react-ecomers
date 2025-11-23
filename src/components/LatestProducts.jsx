@@ -58,7 +58,7 @@ export default function LatestProducts() {
               onClick={async () => {
                 try {
                   const snap = await getDocs(collection(db, "PaymentMethods"));
-                  const paymentMethods = snap.docs.map((doc) => ({
+                  const paymentMethods = snap.docs.map((doc) > ({
                     id: doc.id,
                     ...doc.data(),
                   }));
