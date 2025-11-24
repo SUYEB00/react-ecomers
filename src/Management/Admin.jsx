@@ -185,7 +185,7 @@ const AddProduct = () => {
       </button>
 
       {/* User Management */}
-      <h2 className="text-2xl font-bold mb-5">3. Order Management</h2>
+      <h2 className="text-2xl font-bold mb-5">3. User Management</h2>
       <button
         onClick={() => navigate("/usermanagement")}
         className="px-4 py-2 bg-red-500 text-white rounded mb-5"
