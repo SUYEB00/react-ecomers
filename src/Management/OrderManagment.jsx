@@ -11,9 +11,7 @@ import toast, { Toaster } from "react-hot-toast";
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(false);
 
-  // Fetch orders from Firestore
   const fetchOrders = async () => {
     try {
       const snapshot = await getDocs(collection(db, "Orders"));
@@ -29,7 +27,6 @@ export default function AdminOrders() {
     fetchOrders();
   }, []);
 
-  // Update order status
   const updateStatus = async (orderId, newStatus) => {
     try {
       await updateDoc(doc(db, "Orders", orderId), { status: newStatus });
@@ -41,7 +38,6 @@ export default function AdminOrders() {
     }
   };
 
-  // Delete order
   const deleteOrder = async (orderId) => {
     try {
       await deleteDoc(doc(db, "Orders", orderId));
@@ -56,11 +52,11 @@ export default function AdminOrders() {
   return (
     <div className="w-11/12 mx-auto mt-10 font-pop">
       <Toaster position="top-right" />
+
       <h1 className="text-3xl font-bold text-center text-[#ff8f9c] mb-6">
         Order Management
       </h1>
 
-      {/* TOTAL ORDERS */}
       <div className="mb-5 text-xl font-semibold text-[#21214c]">
         Total Orders: <span className="text-[#ff8f9c]">{orders.length}</span>
       </div>
@@ -68,26 +64,43 @@ export default function AdminOrders() {
       <div className="overflow-x-auto">
         <table className="w-full border border-gray-300 rounded-xl">
           <thead>
-            <tr className="bg-gray-100">
-              <th className="p-2 border">Product</th>
+            <tr className="bg-gray-100 text-sm">
+              <th className="p-2 border">Products</th>
               <th className="p-2 border">Customer</th>
               <th className="p-2 border">Email</th>
-              <th className="p-2 border">Quantity</th>
               <th className="p-2 border">Total Price</th>
               <th className="p-2 border">Status</th>
               <th className="p-2 border">Actions</th>
             </tr>
           </thead>
+
           <tbody>
             {orders.map((order) => (
-              <tr key={order.id} className="text-center">
-                <td className="p-2 border">{order.productTitle}</td>
+              <tr key={order.id} className="text-center text-sm">
+                {/* PRODUCT LIST */}
+                <td className="p-2 border">
+                  {(order.items || []).map((item, index) => (
+                    <p key={index}>
+                      {item.title} (x{item.quantity})
+                    </p>
+                  ))}
+                </td>
+
+                {/* CUSTOMER NAME */}
                 <td className="p-2 border">{order.name}</td>
+
+                {/* CUSTOMER EMAIL */}
                 <td className="p-2 border">{order.email}</td>
-                <td className="p-2 border">{order.quantity}</td>
-                <td className="p-2 border">{order.totalPrice} BDT</td>
-                <td className="p-2 border">{order.status}</td>
-                <td className="p-2 border flex justify-center gap-2">
+
+                <td className="p-2 border font-semibold">
+                  {order.totalPrice} BDT
+                </td>
+
+                <td className="p-2 border font-semibold text-[#ff8f9c]">
+                  {order.status}
+                </td>
+
+                <td className="p-2 flex justify-center gap-2 border">
                   <button
                     onClick={() => updateStatus(order.id, "completed")}
                     className="bg-green-500 text-white px-2 py-1 rounded"
@@ -114,7 +127,7 @@ export default function AdminOrders() {
                   </button>
                   <button
                     onClick={() => deleteOrder(order.id)}
-                    className="bg-red-500 text-white px-2 py-1 rounded"
+                    className="bg-black text-white px-2 py-1 rounded"
                   >
                     Delete
                   </button>

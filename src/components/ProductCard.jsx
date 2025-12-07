@@ -1,55 +1,60 @@
 import React from "react";
 import { FaStar } from "react-icons/fa";
 import { FaRegStarHalfStroke } from "react-icons/fa6";
+import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase";
-import toast from "react-hot-toast";
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
+  const { addToCart, buyNow } = useCart(); // Updated
+
+  const handleAddToCart = () => {
+    addToCart(product);
+  };
+
+  const handleBuyNow = () => {
+    buyNow(product); // Changed
+    navigate("/checkout");
+  };
+
   return (
-    <div
-      className="font-mon transition-transform duration-300 hover:scale-105 border border-[#E5E7EB] rounded-2xl bg-[#ffffff]"
-      onClick={async () => {
-        try {
-          const snap = await getDocs(collection(db, "PaymentMethods"));
-          const paymentMethods = snap.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-
-          if (paymentMethods.length === 0) {
-            toast.error("No payment method available!");
-            return;
-          }
-
-          const payment = paymentMethods[0]; // choose first payment method
-
-          navigate("/checkout", {
-            state: { product, payment },
-          });
-        } catch (err) {
-          console.log(err);
-          toast.error("Failed to load payment method!");
-        }
-      }}
-    >
+    <div className="font-mon border border-gray-200 rounded-xl bg-white p-3 sm:p-3 shadow-sm hover:shadow-lg transition-transform duration-300 transform hover:scale-105 max-w-[200px] sm:max-w-xs mx-auto">
       <img
         src={product.product_picture}
         alt={product.title}
-        className=" mx-auto object-cover rounded-lg"
+        className="w-full h-32 sm:h-40 object-cover rounded-lg"
       />
-      <div className="flex p-2">
-        <div>
-          <h3 className="text-[#21214c] font-mon">{product.title}</h3>
-          <div className="flex text-[#f6a355]">
-            <FaStar /> <FaStar /> <FaStar /> <FaStar /> <FaRegStarHalfStroke />
-          </div>
-          <div className="flex gap-2 mb-3">
-            <p className="line-through">{product.oldprice}</p>{" "}
-            <strong>{product.newprice}</strong> BDT
-          </div>
+
+      <div className="mt-2">
+        <h3 className="text-gray-900 font-semibold text-xs sm:text-sm truncate">
+          {product.title}
+        </h3>
+
+        <div className="flex text-yellow-400 mt-1 text-xs">
+          <FaStar /> <FaStar /> <FaStar /> <FaStar /> <FaRegStarHalfStroke />
+        </div>
+
+        <div className="mt-1 flex items-center gap-1">
+          <p className="line-through text-gray-400 text-xs">
+            ৳{product.oldprice}
+          </p>
+          <strong className="text-gray-900 text-sm">৳{product.newprice}</strong>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-1 mt-2">
+          <button
+            onClick={handleAddToCart}
+            className="w-full sm:w-1/2 bg-black text-white rounded-lg py-1 text-xs hover:bg-pink-400 transition"
+          >
+            Add to Cart
+          </button>
+
+          <button
+            onClick={handleBuyNow}
+            className="w-full sm:w-1/2 bg-pink-400 text-white rounded-lg py-1 text-xs hover:bg-black transition"
+          >
+            Buy Now
+          </button>
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function OrderHistory() {
   const [orders, setOrders] = useState([]);
@@ -10,13 +11,12 @@ export default function OrderHistory() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = auth.currentUser;
-    if (!user) {
-      navigate("/login");
-      return;
-    }
+    let unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        navigate("/login");
+        return;
+      }
 
-    const fetchOrders = async () => {
       try {
         const q = query(
           collection(db, "Orders"),
@@ -36,21 +36,23 @@ export default function OrderHistory() {
       }
 
       setLoading(false);
-    };
+    });
 
-    fetchOrders();
+    return () => unsubscribe();
   }, [navigate]);
 
   if (loading) return <p className="text-center mt-8">Loading...</p>;
 
   return (
-    <div className="w-11/12 mx-auto mt-5 max-w-3xl font-pop">
+    <div className="w-11/12 mx-auto mt-35 max-w-3xl font-pop">
       <h2 className="text-3xl font-bold text-center mb-6 text-[#ff8f9c]">
         Your Orders
       </h2>
 
       {orders.length === 0 ? (
-        <p className="text-4xl font-bold text-center text-[#ff8f9c] mt-10">No orders yet.</p>
+        <p className="text-4xl font-bold text-center text-[#ff8f9c] mt-10">
+          No orders yet.
+        </p>
       ) : (
         <div className="space-y-4">
           {orders.map((order) => (
@@ -58,25 +60,46 @@ export default function OrderHistory() {
               key={order.id}
               className="border p-4 rounded-xl shadow-sm bg-white"
             >
-              <p className="font-semibold text-lg">{order.productTitle}</p>
+              {/* Order ID */}
+              <p className="font-semibold text-lg text-[#21214c]">
+                Order ID: {order.id}
+              </p>
 
-              <div className="flex justify-between mt-2">
-                <span>Quantity:</span>
-                <span>{order.quantity}</span>
+              {/* ITEMS LIST */}
+              <div className="border-t mt-3 pt-3 space-y-2">
+                {order.items?.map((product, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center text-sm"
+                  >
+                    <span>
+                      {product.title} (x{product.quantity})
+                    </span>
+
+                    <span>
+                      {Number(product.newprice || product.price) *
+                        product.quantity}{" "}
+                      BDT
+                    </span>
+                  </div>
+                ))}
               </div>
 
-              <div className="flex justify-between">
+              {/* TOTAL */}
+              <div className="flex justify-between mt-4 text-lg font-semibold">
                 <span>Total Price:</span>
                 <span>{order.totalPrice} BDT</span>
               </div>
 
-              <div className="flex justify-between">
+              {/* STATUS */}
+              <div className="flex justify-between mt-1">
                 <span>Status:</span>
                 <span className="font-semibold text-[#ff8f9c]">
                   {order.status}
                 </span>
               </div>
 
+              {/* ORDER DATE */}
               {order.date && (
                 <p className="text-sm text-gray-500 mt-2">
                   {new Date(order.date.seconds * 1000).toLocaleString()}

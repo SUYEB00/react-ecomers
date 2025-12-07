@@ -2,6 +2,7 @@ import ImageCarousel from "../components/ImageCarousel";
 import Allproducts from "../components/Allproducts";
 import { Toaster } from "react-hot-toast";
 import LatestProducts from "../components/LatestProducts";
+import Partner from "../components/Partner";
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
         <Allproducts></Allproducts>
         <Toaster position="top-right"></Toaster>
         <LatestProducts></LatestProducts>
+        <Partner></Partner>
       </main>
     </div>
   );

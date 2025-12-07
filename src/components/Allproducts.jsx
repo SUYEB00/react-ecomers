@@ -64,23 +64,25 @@ const Allproducts = () => {
 
   return (
     <div className="w-11/12 mx-auto">
-      <CatagoriesNav
-        cetgories={categories}
-        selectCategory={selectCategory}
-        setSelectCategory={setSelectCategory}
-      />
+      <div>
+        <CatagoriesNav
+          cetgories={categories}
+          selectCategory={selectCategory}
+          setSelectCategory={setSelectCategory}
+        />
+      </div>
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <span className="loading loading-dots loading-5xl text-[#ad191b]"></span>
         </div>
       ) : filteredProducts.length > 0 ? (
         <>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 p-2 rounded-2xl shadow bg-[#ffffff]">
             {visibleProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
-          {filteredProducts.length > 8 && (
+          {filteredProducts.length > 12 && (
             <div className="flex justify-center mt-8">
               <button
                 className="px-6 py-2 rounded-full font-medium transition-all duration-300 border border-red-500 text-[#ad191b] hover:bg-[#ad191b] hover:text-white mb-5"

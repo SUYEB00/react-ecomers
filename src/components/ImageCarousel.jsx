@@ -23,22 +23,33 @@ export default function Carousel() {
   }, []);
 
   return (
-    <div className="w-full">
+    <div className="w-11/12 mx-auto flex justify-center mt-30">
       <Swiper
         modules={[Pagination, Autoplay]}
         pagination={{ clickable: true }}
         autoplay={{ delay: 3000, disableOnInteraction: false }}
         loop={true}
-        spaceBetween={20}
+        spaceBetween={10}
         slidesPerView={1}
-        className="mySwiper w-full md:h-[70vh] lg:h-[80vh]"
+        className="mySwiper w-full"
       >
         {slides.map((image, index) => (
           <SwiperSlide key={index}>
             <img
               src={image}
               alt={`Slide ${index + 1}`}
-              className="slider-img w-full h-full mt-10 object-cover"
+              className="
+            w-full 
+            h-[180px]          /* Mobile */
+            sm:h-[250px]       /* Small devices */
+            md:h-[350px]       /* Tablets */
+            lg:h-[480px]       /* Desktop */
+            xl:h-[550px]       /* Large screens */
+            object-center 
+            object-cover 
+            rounded-lg 
+            shadow-sm
+          "
             />
           </SwiperSlide>
         ))}

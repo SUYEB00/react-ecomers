@@ -8,7 +8,7 @@ import {
 
 export default function Footer() {
   return (
-    <footer className="bg-[#202020] text-white font-pop mt-20">
+    <footer className="bg-[#202020] text-white font-pop">
       <div className="w-11/12 max-w-6xl mx-auto py-10 grid grid-cols-1 md:grid-cols-3 gap-10">
         {/* About Section */}
         <div>

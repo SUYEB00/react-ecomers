@@ -10,10 +10,13 @@ import { FaRegStarHalfStroke } from "react-icons/fa6";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext"; // <= use buyNow
 
 export default function LatestProducts() {
   const [products, setProducts] = useState([]);
+  const [paymentMethod, setPaymentMethod] = useState(null);
   const navigate = useNavigate();
+  const { buyNow } = useCart(); // <-- use buyNow to set single-item flow
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -23,7 +26,6 @@ export default function LatestProducts() {
           id: doc.id,
           ...doc.data(),
         }));
-
         setProducts(data);
       } catch (error) {
         console.log(error);
@@ -31,76 +33,100 @@ export default function LatestProducts() {
       }
     };
 
+    const fetchPayments = async () => {
+      try {
+        const snap = await getDocs(collection(db, "PaymentMethods"));
+        const pm = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        if (pm.length > 0) setPaymentMethod(pm[0]);
+      } catch (err) {
+        console.log(err);
+        toast.error("Failed to load payment method!");
+      }
+    };
+
     fetchProducts();
+    fetchPayments();
   }, []);
 
+  const openCheckout = (product) => {
+    if (!paymentMethod) {
+      toast.error("Payment method not found!");
+      return;
+    }
+
+    // 1) set buy-now item in context (so Checkout reads it)
+    buyNow({
+      id: product.id,
+      title: product.title,
+      newprice: product.newprice,
+      product_picture: product.product_picture,
+      quantity: 1,
+    });
+
+    // 2) navigate to checkout (must be the route that renders Checkout)
+    navigate("/checkout", {
+      state: {
+        payment: paymentMethod, // optional, Checkout already fetches payment methods; you can supply it
+      },
+    });
+  };
+
   return (
-    <div className=" max-full mx-auto w-11/12 mb-3">
-      <h2 className="text-2xl font-pop font-bold mt-5 mb-5 text-center text-[#ff8f9c]">
+    <div className="w-11/12 mx-auto mb-6 rounded-2xl shadow bg-[#ffffff] p-3 mt-10">
+      <h2 className="text-2xl font-pop font-bold ml-2  mb-3 text-[black]">
         Latest Products
       </h2>
 
       <Swiper
         modules={[Autoplay, Pagination]}
-        slidesPerView={1}
-        spaceBetween={20}
+        slidesPerView={2}
+        spaceBetween={10}
         autoplay={{ delay: 3000, disableOnInteraction: false }}
         breakpoints={{
+          480: { slidesPerView: 2 },
           640: { slidesPerView: 3 },
-          1024: { slidesPerView: 6 },
+          1024: { slidesPerView: 6 }, // full size for lg
         }}
-        className="rounded-xl"
       >
         {products.map((product) => (
           <SwiperSlide key={product.id}>
-            <div
-              className="h-50 md:h-65 font-mon transition-transform duration-300 hover:scale-105 border border-[#E5E7EB] rounded-2xl bg-[#ffffff]"
-              onClick={async () => {
-                try {
-                  const snap = await getDocs(collection(db, "PaymentMethods"));
-                  const paymentMethods = snap.docs.map((doc) => ({
-                    id: doc.id,
-                    ...doc.data(),
-                  }));
-
-                  if (paymentMethods.length === 0) {
-                    toast.error("No payment method found!");
-                    return;
-                  }
-
-                  const payment = paymentMethods[0]; // use first payment method
-
-                  navigate("/checkout", {
-                    state: {
-                      product,
-                      payment,
-                    },
-                  });
-                } catch (error) {
-                  console.log(error);
-                  toast.error("Failed to load payment method!");
-                }
-              }}
+            <button
+              type="button"
+              className="
+    block border border-gray-200 rounded-xl bg-white shadow-sm 
+    transition-transform duration-300 hover:scale-105 mt-2 mb-2 p-2 w-[140px] mx-auto sm:p-3 sm:w-[180px] lg:w-[200px] lg:p-3"
+              onClick={() => openCheckout(product)}
             >
               <img
                 src={product.product_picture}
                 alt={product.title}
-                className="h-[120px] w-[120px] lg:h-[70%] mx-auto lg:w-[70%] object-cover rounded-lg"
+                className="h-[100px] w-[100px] mx-auto rounded object-cover sm:h-[160px] sm:w-[160px]"
               />
-              <div className="flex p-2">
-                <div>
-                  <h3 className="text-[#21214c] fonr-mon">{product.title}</h3>
-                  <div className="flex text-[#f6a355]">
-                    <FaStar /> <FaStar /> <FaStar /> <FaStar />{" "}
-                    <FaRegStarHalfStroke />
-                  </div>
-                  <div className="flex gap-2 mb-3">
-                    <p className="line-through">{product.oldprice}</p>{" "}
-                    <strong>{product.newprice}</strong> BDT
-                  </div>
+
+              <div className="mt-2 px-1">
+                <h3 className="font-mon text-[#21214c] truncate text-xs font-semibold sm:text-sm sm:font-bold text-left">
+                  {product.title}
+                </h3>
+
+                <div
+                  className="
+              flex text-[#f6a355] text-xs sm:text-sm"
+                >
+                  <FaStar /> <FaStar /> <FaStar /> <FaStar />{" "}
+                  <FaRegStarHalfStroke />
+                </div>
+
+                <div className="flex items-center gap-2 mt-1">
+                  <p className="line-through text-gray-400 text-[10px] sm:text-sm">
+                    {product.oldprice}
+                  </p>
+                  <strong className="text-xs sm:text-base">
+                    {product.newprice}
+                  </strong>
+                  <span className="text-[10px] sm:text-sm">BDT</span>
                 </div>
               </div>
-            </div>
+            </button>
           </SwiperSlide>
         ))}
       </Swiper>

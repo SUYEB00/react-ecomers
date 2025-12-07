@@ -1,6 +1,7 @@
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
+
 import Root from "./Layouts/Root";
 import Login from "./Authentication/Login";
 import Signup from "./Authentication/Signup";
@@ -13,58 +14,80 @@ import Contact from "./Pages/Contact";
 import OrderManagment from "./Management/OrderManagment";
 import MessageManagement from "./Management/MessageManagement";
 import UserManagement from "./Management/UserManagement";
+import TermsOfUse from "./components/TermsOfUse";
+import PrivacyPolicy from "./components/PrivacyPolicy";
+
+// ⬅⬅⬅ ADD THIS IMPORT
+import { CartProvider } from "./context/CartContext";
+import Cart from "./Pages/Cart";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root></Root>,
+    element: <Root />,
   },
   {
     path: "/login",
-    element: <Login></Login>,
+    element: <Login />,
   },
   {
     path: "/signup",
-    element: <Signup></Signup>,
+    element: <Signup />,
   },
   {
     path: "/admin",
-    element: <Admin></Admin>,
+    element: <Admin />,
   },
   {
     path: "/checkout",
-    element: <Checkout></Checkout>,
+    element: <Checkout />,
   },
   {
     path: "/orders",
-    element: <Orders></Orders>,
+    element: <Orders />,
   },
   {
     path: "/products",
-    element: <Products></Products>,
+    element: <Products />,
   },
   {
     path: "/about",
-    element: <About></About>,
+    element: <About />,
   },
   {
     path: "/contact",
-    element: <Contact></Contact>,
+    element: <Contact />,
   },
   {
     path: "/ordermanagement",
-    element: <OrderManagment></OrderManagment>,
+    element: <OrderManagment />,
   },
   {
     path: "/messagemanagement",
-    element: <MessageManagement></MessageManagement>,
+    element: <MessageManagement />,
   },
   {
     path: "/usermanagement",
-    element: <UserManagement></UserManagement>,
+    element: <UserManagement />,
+  },
+  {
+    path: "/terms",
+    element: <TermsOfUse />,
+  },
+  {
+    path: "/privacy",
+    element: <PrivacyPolicy />,
+  },
+  {
+    path: "/cart",
+    element: <Cart></Cart>,
   },
 ]);
 
 const root = document.getElementById("root");
 
-ReactDOM.createRoot(root).render(<RouterProvider router={router} />);
+ReactDOM.createRoot(root).render(
+  <CartProvider>
+    <RouterProvider router={router} />
+  </CartProvider>
+);

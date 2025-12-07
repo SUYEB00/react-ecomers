@@ -41,7 +41,7 @@ export default function Contact() {
   };
 
   return (
-    <div className="w-11/12 max-w-2xl mx-auto mt-20 font-pop">
+    <div className="w-11/12 max-w-2xl mx-auto mt-35 font-pop">
       <Toaster position="top-right" />
       <h1 className="text-4xl font-bold text-center text-[#ff8f9c] mb-6">
         Contact Us

@@ -3,6 +3,8 @@ import { IoPersonOutline } from "react-icons/io5";
 import { auth } from "../firebase";
 import { signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
+import { useCart } from "../context/CartContext";
+import { CiShoppingCart } from "react-icons/ci";
 
 export default function Navbar() {
   const [user, setUser] = useState(null);
@@ -10,6 +12,9 @@ export default function Navbar() {
   const navigate = useNavigate();
   const adminEmail = "suaibhasan00@gmail.com";
   const [isAdmin, setIsAdmin] = useState(false);
+
+  const { cart } = useCart();
+  const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
 
   const link = (
     <>
@@ -56,7 +61,7 @@ export default function Navbar() {
 
   return (
     <div className="navbar shadow-md #faf6f1 backdrop-blur-md text-[#202020] fixed top-0 left-0 right-0 z-100 font-mon">
-      <div className="w-11/12 mx-auto flex justify-between items-center">
+      <div className="w-11/12 mx-auto flex justify-between items-center py-5">
         <div className="navbar-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -83,7 +88,10 @@ export default function Navbar() {
             </ul>
           </div>
           <div className="flex items-center gap-10">
-            <a className="lg:text-4xl sm:text-2xl font-mon font-bold text-[#ff8f9c] hover:text-[#000000] transition">
+            <a
+              onClick={() => navigate("/")}
+              className="lg:text-4xl sm:text-2xl font-mon font-bold text-[#ff8f9c] hover:text-[#000000] transition"
+            >
               TRENDZONE
             </a>
             <div className="navbar-center hidden lg:flex">
@@ -93,10 +101,10 @@ export default function Navbar() {
         </div>
 
         {/* Search Form */}
-        <div className="navbar-end flex gap-2 md:gap-6 lg:gap-6">
+        <div className="navbar-end flex gap-2 md:gap-6 lg:gap-6 justify-center">
           <form
             onSubmit={handleSearch}
-            className="flex items-center gap-2 bg-white/10 rounded-full px-3 py-2 border border-[#D1D5DC]"
+            className="flex items-center gap-2 bg-white/10 rounded-full w-180 px-3 py-2 border border-[#D1D5DC]"
           >
             <svg
               className="h-[1em] opacity-50"
@@ -122,6 +130,21 @@ export default function Navbar() {
               className="bg-transparent outline-none text-sm text-[#202020] placeholder-[#202020] w-15 md:w-40 sm:flex"
             />
           </form>
+
+          <div>
+            {/* CART ICON */}
+            <div
+              className="relative text-black hover:text-[#ff8f9c]"
+              onClick={() => navigate("/cart")}
+            >
+              <CiShoppingCart className="text-3xl md:text-4xl lg:text-4xl" />
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                  {totalItems}
+                </span>
+              )}
+            </div>
+          </div>
 
           <div className="relative flex-none">
             <div

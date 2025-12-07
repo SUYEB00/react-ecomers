@@ -9,12 +9,9 @@
 }
 
 html, body, #root{
-@apply bg-[#ffffff] text-black min-h-screen
+@apply bg-[#fcfcfc] text-black min-h-screen
 }
 
 .swiper-pagination-bullet{
     background-color: rgb(214, 94, 94) !important;
-}
-.swiper-pagination-bullet-active{
-    background-color: rgba(rgb(255, 0, 0));
 }

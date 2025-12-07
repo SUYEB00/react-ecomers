@@ -1,4 +1,5 @@
 import { useLocation } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 import { useEffect, useState } from "react";
 import {
   collection,
@@ -16,7 +17,8 @@ import { IoCashOutline } from "react-icons/io5";
 export default function Checkout() {
   const navigate = useNavigate();
   const location = useLocation();
-  const product = location.state?.product;
+
+  const { cart, clearCart, buyNowItem, clearBuyNow } = useCart();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -25,14 +27,16 @@ export default function Checkout() {
     return unsubscribe;
   }, [navigate]);
 
-  const [quantity, setQuantity] = useState(1);
   const DELIVERY_CHARGE = 80;
 
-  const totalProductPrice = quantity * Number(product?.newprice || 0);
-  const subTotal = totalProductPrice + DELIVERY_CHARGE;
+  const itemsToShow = buyNowItem ? [buyNowItem] : cart; // IMPORTANT
 
-  const decreaseQty = () => quantity > 1 && setQuantity(quantity - 1);
-  const increaseQty = () => setQuantity(quantity + 1);
+  const totalProductPrice = itemsToShow.reduce(
+    (total, item) => total + item.quantity * Number(item.newprice),
+    0
+  );
+
+  const subTotal = totalProductPrice + DELIVERY_CHARGE;
 
   const [form, setForm] = useState({
     name: "",
@@ -45,9 +49,6 @@ export default function Checkout() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // ------------------------------
-  // Fetch ALL payment methods
-  // ------------------------------
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [selectedPayment, setSelectedPayment] = useState(null);
 
@@ -56,15 +57,12 @@ export default function Checkout() {
       const snap = await getDocs(collection(db, "PaymentMethods"));
       const list = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
       setPaymentMethods(list);
-      if (list.length > 0) setSelectedPayment(list[0]); // Auto-select first
+      if (list.length > 0) setSelectedPayment(list[0]);
     };
 
     fetchPayments();
   }, []);
 
-  // ------------------------------
-  // ORDER HANDLER
-  // ------------------------------
   const [loading, setLoading] = useState(false);
 
   const handleOrder = async () => {
@@ -78,19 +76,20 @@ export default function Checkout() {
     try {
       await addDoc(collection(db, "Orders"), {
         userEmail: auth.currentUser.email,
-        productId: product.id,
-        productTitle: product.title,
-        price: product.newprice,
-        quantity,
+        items: itemsToShow.map((item) => ({
+          id: item.id,
+          title: item.title,
+          price: item.newprice,
+          quantity: item.quantity,
+        })),
+        deliveryCharge: DELIVERY_CHARGE,
         totalPrice: subTotal,
         name: form.name,
         email: form.email,
         address: form.address,
         trxId: form.trxId,
-
         payment_type: selectedPayment.payment_type,
         payment_no: selectedPayment.payment_no,
-
         status: "pending",
         date: serverTimestamp(),
       });
@@ -102,6 +101,11 @@ export default function Checkout() {
         showConfirmButton: false,
         timer: 1500,
       });
+
+      // Clear correct data
+      if (buyNowItem) clearBuyNow();
+      else clearCart();
+
       setTimeout(() => navigate("/orders"), 2000);
     } catch (error) {
       console.log(error);
@@ -111,13 +115,12 @@ export default function Checkout() {
     setLoading(false);
   };
 
-  if (!product) {
+  if (itemsToShow.length === 0)
     return (
       <h2 className="text-4xl font-bold text-center text-[#ff8f9c] mt-10">
-        No product selected
+        Your cart is empty
       </h2>
     );
-  }
 
   return (
     <div className="w-11/12 mx-auto mt-6 max-w-xl font-pop">
@@ -127,54 +130,39 @@ export default function Checkout() {
         Checkout
       </h2>
 
-      {/* PRODUCT SECTION */}
-      <div className="w-full mb-4 p-3 border border-gray-300 rounded-xl">
-        <img
-          src={product.product_picture}
-          alt={product.title}
-          className="w-40 mx-auto rounded-lg"
-        />
+      <div className="w-full mb-4 p-3 border border-gray-300 rounded-xl space-y-3">
+        {itemsToShow.map((item) => (
+          <div key={item.id} className="border-b pb-3">
+            <div className="flex items-center gap-3">
+              <img
+                src={item.product_picture}
+                alt={item.title}
+                className="w-20 h-20 rounded-lg border"
+              />
 
-        <h3 className="text-xl text-center mt-3 font-semibold">
-          {product.title}
-        </h3>
+              <div>
+                <h3 className="text-lg font-semibold">{item.title}</h3>
+                <p className="text-black font-bold">{item.newprice} BDT</p>
+                <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
+              </div>
+            </div>
+          </div>
+        ))}
 
-        <p className="text-center text-lg font-bold text-black">
-          {product.newprice} BDT
-        </p>
-
-        {/* DESCRIPTION */}
-        <div className="mt-4">
-          <p className="text-left text-lg font-semibold text-black">
-            Description
-          </p>
-
-          <p className="text-left text-sm text-gray-700 mt-1 leading-relaxed">
-            {product.product_description}
-          </p>
-        </div>
-
-        <div className="w-25 flex items-center justify-center gap-4 mt-4 border border-gray-300">
-          <button onClick={decreaseQty} className="px-2 text-xl">
-            -
-          </button>
-          <span className="text-2xl">{quantity}</span>
-          <button onClick={increaseQty} className="px-2 text-xl">
-            +
-          </button>
-        </div>
-
-        <div className="mt-5 w-full mb-4 p-3 border border-gray-300 rounded-xl">
+        <div className="mt-5">
           <p className="flex justify-between text-lg">
             <span>Product Total</span>
             <span>{totalProductPrice} BDT</span>
           </p>
+
           <p className="flex justify-between text-lg mt-2">
             <span>Delivery Charge</span>
             <span>{DELIVERY_CHARGE} BDT</span>
           </p>
+
           <hr className="my-3" />
-          <p className="flex justify-between text-xl font-bold text-black">
+
+          <p className="flex justify-between text-xl font-bold">
             <span>Subtotal</span>
             <span>{subTotal} BDT</span>
           </p>
@@ -182,7 +170,6 @@ export default function Checkout() {
       </div>
 
       <div className="mt-6 space-y-4">
-        {/* USER INFO */}
         <input
           name="name"
           onChange={handleChange}
@@ -204,48 +191,34 @@ export default function Checkout() {
           className="w-full mb-4 p-3 border rounded-xl"
         ></textarea>
 
-        {/* PAYMENT METHODS */}
         <div className="w-full mb-4 p-3 border border-gray-300 rounded-xl">
           <h3 className="text-lg font-bold mb-2">Select Payment Method</h3>
 
-          {paymentMethods.length === 0 ? (
-            <p className="text-sm text-red-500">No payment methods found!</p>
-          ) : (
-            paymentMethods.map((pm) => (
-              <label
-                key={pm.id}
-                className={`flex items-center gap-3 p-3 mb-2 border rounded-xl cursor-pointer transition 
-               ${
-                 selectedPayment?.id === pm.id
-                   ? "border-[#ff8f9c] bg-pink-50"
-                   : "bg-white"
-               }`}
-              >
-                <input
-                  type="radio"
-                  checked={selectedPayment?.id === pm.id}
-                  onChange={() => setSelectedPayment(pm)}
-                />
-                <div className="flex items-center gap-3">
-                  <IoCashOutline className="text-xl mb-1" />
-                  <div>
-                    <p className="font-semibold">{pm.payment_type}</p>
-                    <p className="text-sm text-gray-600">{pm.payment_no}</p>
-                  </div>
+          {paymentMethods.map((pm) => (
+            <label
+              key={pm.id}
+              className={`flex items-center gap-3 p-3 mb-2 border rounded-xl cursor-pointer transition ${
+                selectedPayment?.id === pm.id
+                  ? "border-[#ff8f9c] bg-pink-50"
+                  : "bg-white"
+              }`}
+            >
+              <input
+                type="radio"
+                checked={selectedPayment?.id === pm.id}
+                onChange={() => setSelectedPayment(pm)}
+              />
+              <div className="flex items-center gap-3">
+                <IoCashOutline className="text-xl mb-1" />
+                <div>
+                  <p className="font-semibold">{pm.payment_type}</p>
+                  <p className="text-sm text-gray-600">{pm.payment_no}</p>
                 </div>
-              </label>
-            ))
-          )}
-
-          {selectedPayment && (
-            <p className="text-sm mt-2">
-              Send payment to <strong>{selectedPayment.payment_no} </strong>
-              and enter the transaction ID below.
-            </p>
-          )}
+              </div>
+            </label>
+          ))}
         </div>
 
-        {/* TRX ID */}
         <input
           name="trxId"
           onChange={handleChange}
@@ -253,7 +226,6 @@ export default function Checkout() {
           className="w-full mb-4 p-3 border rounded-xl"
         />
 
-        {/* CONFIRM BUTTON */}
         <button
           onClick={handleOrder}
           disabled={loading}

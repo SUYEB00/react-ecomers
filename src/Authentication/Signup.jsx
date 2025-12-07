@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { auth } from "../firebase";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
+import {} from "firebase/auth";
+
 import { doc, setDoc } from "firebase/firestore"; // ✅ ADD THIS
 import { db } from "../firebase"; // ✅ ADD THIS
 import { useNavigate } from "react-router-dom";
@@ -13,6 +20,33 @@ export default function Signup() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const navigate = useNavigate();
+
+  const googleProvider = new GoogleAuthProvider();
+
+  const handleGoogleSignup = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+
+      // Save user to Firestore if new
+      await setDoc(
+        doc(db, "Users", user.uid),
+        {
+          uid: user.uid,
+          name: user.displayName,
+          email: user.email,
+          role: "user",
+          createdAt: new Date().toISOString(),
+        },
+        { merge: true } // ⬅ If user exists, don't overwrite
+      );
+
+      toast.success("Logged in with Google!");
+      navigate("/");
+    } catch (err) {
+      toast.error("Google login failed. Try again.");
+    }
+  };
 
   const handleSignup = async () => {
     if (password !== confirmPassword) {
@@ -58,53 +92,94 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white font-pop">
+    <div className="flex min-h-screen items-center justify-center bg-gray-100 font-pop p-4">
       <Toaster position="top-right" />
-      <div className="w-11/12 max-w-sm bg-white p-8 rounded-2xl border border-gray-200 shadow">
-        <h2 className="text-2xl font-semibold text-center mb-6">Sign Up</h2>
+
+      <div className="w-full p-6 sm:p-8 max-w-sm bg-white rounded-2xl shadow-lg border border-gray-200">
+        <h2 className="text-center text-3xl text-gray-900 font-semibold mb-2">
+          Create an account
+        </h2>
+
+        <div className="flex justify-center gap-1 mb-6">
+          <p className="text-sm text-gray-600">Already have an account?</p>
+          <p
+            onClick={() => navigate("/login")}
+            className="text-blue-600 text-sm cursor-pointer hover:underline"
+          >
+            Login
+          </p>
+        </div>
 
         <input
           type="text"
           placeholder="Name"
-          className="w-full mb-4 p-3 border border-gray-300 rounded-xl focus:outline-none"
+          className="w-full mb-4 p-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 focus:border-blue-600 focus:outline-none transition"
           onChange={(e) => setName(e.target.value)}
         />
 
         <input
           type="email"
-          placeholder="Email"
-          className="w-full mb-5 p-3 border border-gray-300 rounded-xl focus:outline-none"
+          placeholder="Email address"
+          className="w-full mb-4 p-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 focus:border-blue-600 focus:outline-none transition"
           onChange={(e) => setEmail(e.target.value)}
         />
 
         <input
           type="password"
           placeholder="Password"
-          className="w-full mb-5 p-3 border border-gray-300 rounded-xl focus:outline-none"
+          className="w-full mb-4 p-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 focus:border-blue-600 focus:outline-none transition"
           onChange={(e) => setPassword(e.target.value)}
         />
 
         <input
           type="password"
           placeholder="Confirm Password"
-          className="w-full mb-2 p-3 border border-gray-300 rounded-xl focus:outline-none"
+          className="w-full mb-4 p-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 focus:border-blue-600 focus:outline-none transition"
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
 
-        <div
-          className="text-sm mb-5 cursor-pointer"
-          onClick={() => navigate("/login")}
+        <button
+          className="w-full p-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition mb-6"
+          onClick={handleSignup}
         >
-          <p className="text-gray-600">Already have an account?</p>
-          <p className="text-red-500">Login instead</p>
-        </div>
+          Continue
+        </button>
+
+        <p className="text-gray-500 text-center text-sm mb-5 border-b border-gray-300 pb-2">
+          or sign up with
+        </p>
 
         <button
-          onClick={handleSignup}
-          className="w-full bg-[#ff8f9c] text-white py-3 rounded-xl hover:bg-[#000000] transition"
+          className="w-full flex items-center justify-center gap-3 bg-white text-gray-800 font-semibold rounded-xl py-3 mb-6 hover:bg-gray-100 transition border border-gray-300 shadow-sm"
+          onClick={handleGoogleSignup}
         >
-          Sign Up
+          <img
+            src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+            alt="Google"
+            className="w-5 h-5"
+          />
+          Continue with Google
         </button>
+
+        <p className="text-[13px] text-center text-gray-600">
+          By clicking continue, you agree to Recognotes
+        </p>
+
+        <div className="flex gap-2 justify-center mt-1 text-[13px]">
+          <p
+            onClick={() => navigate("/terms")}
+            className="text-blue-600 cursor-pointer hover:underline"
+          >
+            Terms of use
+          </p>
+          <p className="text-gray-600">and</p>
+          <p
+            onClick={() => navigate("/privacy")}
+            className="text-blue-600 cursor-pointer hover:underline"
+          >
+            Privacy policy
+          </p>
+        </div>
       </div>
     </div>
   );
