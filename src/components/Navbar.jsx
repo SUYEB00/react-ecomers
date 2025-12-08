@@ -1,182 +1,246 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { IoInformationCircleOutline, IoPersonOutline } from "react-icons/io5";
 import { auth } from "../firebase";
 import { signOut } from "firebase/auth";
+import { useEffect, useState } from "react";
 import { useCart } from "../context/CartContext";
-
-import { FiShoppingCart, FiUser } from "react-icons/fi";
-import { AiOutlineHome } from "react-icons/ai";
-import { HiOutlineClipboardList, HiOutlineShoppingBag } from "react-icons/hi";
-import { IoInformationCircleOutline } from "react-icons/io5";
+import { CiMenuBurger, CiShoppingCart } from "react-icons/ci";
+import { FiLogIn, FiLogOut, FiUserPlus } from "react-icons/fi";
 import { RiCustomerService2Line } from "react-icons/ri";
+import { HiOutlineClipboardList, HiOutlineShoppingBag } from "react-icons/hi";
+import { AiOutlineHome } from "react-icons/ai";
 
 export default function Navbar() {
-  const navigate = useNavigate();
-  const { cart } = useCart();
-
   const [user, setUser] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
-
-  const totalItems = cart.reduce((t, i) => t + i.quantity, 0);
-  const adminEmail = "suaibhasan845@gmail.com";
+  const navigate = useNavigate();
+  const adminEmail = "suaibhasan00@gmail.com";
   const [isAdmin, setIsAdmin] = useState(false);
+
+  const { cart } = useCart();
+  const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+
+  const link = (
+    <>
+      <li
+        onClick={() => navigate("/")}
+        className="flex items-center gap-2 cursor-pointer"
+      >
+        <AiOutlineHome className="text-lg" />
+        Home
+      </li>
+
+      <li
+        onClick={() => navigate("/products")}
+        className="flex items-center gap-2 cursor-pointer"
+      >
+        <HiOutlineShoppingBag className="text-lg" />
+        Product
+      </li>
+
+      <li
+        onClick={() => navigate("/orders")}
+        className="flex items-center gap-2 cursor-pointer"
+      >
+        <HiOutlineClipboardList className="text-lg" />
+        Orders
+      </li>
+
+      <li
+        onClick={() => navigate("/about")}
+        className="flex items-center gap-2 cursor-pointer"
+      >
+        <IoInformationCircleOutline className="text-lg" />
+        About
+      </li>
+
+      <li
+        onClick={() => navigate("/contact")}
+        className="flex items-center gap-2 cursor-pointer"
+      >
+        <RiCustomerService2Line className="text-lg" />
+        Contact
+      </li>
+    </>
+  );
 
   const [searchTerm, setSearchTerm] = useState("");
 
+  // ✅ Only one handleSearch function
   const handleSearch = (e) => {
-    e.preventDefault();
-    if (!searchTerm.trim()) return;
+    e.preventDefault(); // prevent page reload
+    if (!searchTerm) return;
     navigate(`/products?search=${searchTerm}`);
   };
 
+  // Keep user logged in
   useEffect(() => {
-    const unsub = auth.onAuthStateChanged((u) => {
-      setUser(u);
-      setIsAdmin(u?.email === adminEmail);
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUser(user); // null if not logged in
+      setIsAdmin(user?.email === adminEmail);
     });
-    return unsub;
+    return unsubscribe;
   }, []);
+
+  const handleIconClick = () => {
+    setShowPopup((prev) => !prev); // just toggle dropdown
+  };
 
   const logout = async () => {
     await signOut(auth);
-    navigate("/");
     setShowPopup(false);
-  };
-
-  const handleUserClick = () => {
-    if (!user) {
-      navigate("/login");
-    } else {
-      setShowPopup(true);
-      setTimeout(() => setShowPopup(false), 4000);
-    }
+    navigate("/");
   };
 
   return (
-    <div className="w-full bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50 font-mon">
-      {/* SEARCH BAR (center like Evaly) */}
-      <div className="w-full flex justify-center border-b border-gray-200">
-        <form
-          onSubmit={handleSearch}
-          className="flex items-center w-11/12 max-w-2xl bg-gray-100 border border-gray-300 rounded-full px-4 py-2 my-3"
-        >
-          <input
-            type="search"
-            placeholder="Search products..."
-            className="bg-transparent w-full outline-none text-sm"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button className="bg-black text-white px-4 py-1.5 rounded-full text-sm">
-            Search
-          </button>
-        </form>
-      </div>
+    <div className="navbar shadow-md #faf6f1 backdrop-blur-md text-[#202020] fixed top-0 left-0 right-0 z-100 font-mon">
+      <div className="w-11/12 mx-auto flex justify-between items-center py-5">
+        <div className="navbar-start">
+          <div className="flex items-center gap-10">
+            <a
+              onClick={() => navigate("/")}
+              className="lg:text-4xl sm:text-2xl font-mon font-bold text-[#000000]"
+            >
+              TRENDZONE
+            </a>
+            <div className="navbar-center hidden lg:flex">
+              <ul className="flex gap-6">{link}</ul>
+            </div>
+          </div>
+        </div>
 
-      {/* MAIN NAV */}
-      <div className="w-11/12 mx-auto py-4 flex items-center justify-between gap-4">
-        {/* LOGO */}
-        <h1
-          onClick={() => navigate("/")}
-          className="text-3xl font-bold cursor-pointer"
-        >
-          TRENDZONE
-        </h1>
-
-        {/* RIGHT ICONS */}
-        <div className="flex items-center gap-5">
-          {/* CART ICON */}
-          <div
-            className="relative cursor-pointer"
-            onClick={() => navigate("/cart")}
+        {/* Search Form */}
+        <div className="navbar-end flex gap-2 md:gap-6 lg:gap-6 justify-center">
+          <form
+            onSubmit={handleSearch}
+            className="flex items-center gap-2 bg-white/10 rounded-full w-180 px-3 py-2 border border-[#D1D5DC]"
           >
-            <FiShoppingCart className="text-2xl" />
-            {totalItems > 0 && (
-              <span className="absolute -top-2 -right-3 w-5 h-5 text-xs bg-red-500 text-white rounded-full flex items-center justify-center">
-                {totalItems}
-              </span>
-            )}
+            <svg
+              className="h-[1em] opacity-50"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <g
+                strokeLinejoin="round"
+                strokeLinecap="round"
+                strokeWidth="2.5"
+                fill="none"
+                stroke="currentColor"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.3-4.3"></path>
+              </g>
+            </svg>
+            <input
+              type="search"
+              placeholder="Search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="bg-transparent outline-none text-sm text-[#202020] placeholder-[#202020] w-15 md:w-40 sm:flex"
+            />
+          </form>
+
+          <div>
+            {/* CART ICON */}
+            <div
+              className="relative text-black"
+              onClick={() => navigate("/cart")}
+            >
+              <CiShoppingCart className="text-3xl md:text-4xl lg:text-4xl" />
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                  {totalItems}
+                </span>
+              )}
+            </div>
           </div>
 
-          {/* USER ICON */}
-          <div className="relative cursor-pointer" onClick={handleUserClick}>
-            <FiUser className="text-2xl" />
+          <div className="relative flex-none">
+            {/* Menu Icon */}
+            <div className="text-2xl cursor-pointer" onClick={handleIconClick}>
+              <CiMenuBurger />
+            </div>
 
-            {user && showPopup && (
-              <div className="absolute right-0 top-10 bg-white w-56 p-4 shadow-lg rounded-xl">
-                <p className="text-sm break-all">{user.email}</p>
+            {/* Dropdown Menu */}
+            {showPopup && (
+              <div className="absolute right-0 top-12 bg-white shadow-lg rounded-xl p-4 w-56 z-50">
+                {/* If user logged in (email + logout) */}
+                {user ? (
+                  <div className="border-b pb-3 mb-3 text-center">
+                    <p className="text-sm break-all">{user.email}</p>
 
-                {isAdmin && (
-                  <button
-                    onClick={() => navigate("/admin")}
-                    className="mt-3 w-full bg-black text-white py-2 rounded-lg"
-                  >
-                    Admin Panel
-                  </button>
+                    <button
+                      onClick={logout}
+                      className="mt-2 w-full flex items-center justify-center gap-2 bg-black text-white py-2 rounded-xl text-sm"
+                    >
+                      <FiLogOut className="text-lg" />
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <div className="border-b pb-3 mb-3 text-center">
+                    <button
+                      onClick={() => navigate("/signup")}
+                      className="w-full flex items-center justify-center gap-2 bg-black text-white py-2 rounded-xl text-sm"
+                    >
+                      <FiUserPlus className="text-lg" />
+                      Sign Up
+                    </button>
+
+                    <button
+                      onClick={() => navigate("/login")}
+                      className="mt-2 w-full flex items-center justify-center gap-2 bg-black text-white py-2 rounded-xl text-sm"
+                    >
+                      <FiLogIn className="text-lg" />
+                      Login
+                    </button>
+                  </div>
                 )}
 
+                {/* MENU ITEMS */}
                 <button
-                  onClick={() => navigate("/orders")}
-                  className="mt-3 w-full bg-black text-white py-2 rounded-lg"
+                  onClick={() => navigate("/")}
+                  className="w-full flex items-center gap-2 py-2 px-2 rounded-lg text-[15px] hover:bg-gray-100"
                 >
-                  Order History
+                  <AiOutlineHome className="text-xl" />
+                  Home
                 </button>
 
                 <button
-                  onClick={logout}
-                  className="mt-3 w-full bg-black text-white py-2 rounded-lg"
+                  onClick={() => navigate("/products")}
+                  className="w-full flex items-center gap-2 py-2 px-2 rounded-lg text-[15px] hover:bg-gray-100"
                 >
-                  Logout
+                  <HiOutlineShoppingBag className="text-xl" />
+                  Products
+                </button>
+
+                <button
+                  onClick={() => navigate("/orders")}
+                  className="w-full flex items-center gap-2 py-2 px-2 rounded-lg text-[15px] hover:bg-gray-100"
+                >
+                  <HiOutlineClipboardList className="text-xl" />
+                  Orders
+                </button>
+
+                <button
+                  onClick={() => navigate("/about")}
+                  className="w-full flex items-center gap-2 py-2 px-2 rounded-lg text-[15px] hover:bg-gray-100"
+                >
+                  <IoInformationCircleOutline className="text-xl" />
+                  About
+                </button>
+
+                <button
+                  onClick={() => navigate("/contact")}
+                  className="w-full flex items-center gap-2 py-2 px-2 rounded-lg text-[15px] hover:bg-gray-100"
+                >
+                  <RiCustomerService2Line className="text-xl" />
+                  Contact
                 </button>
               </div>
             )}
           </div>
         </div>
-      </div>
-
-      {/* BOTTOM MENU */}
-      <div className="bg-white border-t border-gray-200 py-2 flex justify-center">
-        <ul className="flex gap-2 lg:gap-6 text-sm">
-          <li
-            onClick={() => navigate("/")}
-            className="cursor-pointer hover:text-black flex items-center gap-1"
-          >
-            <AiOutlineHome className="text-2xl" />
-            Home
-          </li>
-
-          <li
-            onClick={() => navigate("/products")}
-            className="cursor-pointer hover:text-black flex items-center gap-1"
-          >
-            <HiOutlineShoppingBag className="text-2xl" />
-            Shops
-          </li>
-
-          <li
-            onClick={() => navigate("/orders")}
-            className="cursor-pointer hover:text-black flex items-center gap-1"
-          >
-            <HiOutlineClipboardList className="text-2xl" />
-            Orders
-          </li>
-
-          <li
-            onClick={() => navigate("/about")}
-            className="cursor-pointer hover:text-black flex items-center gap-1"
-          >
-            <IoInformationCircleOutline className="text-2xl" />
-            About
-          </li>
-
-          <li
-            onClick={() => navigate("/contact")}
-            className="cursor-pointer hover:text-black flex items-center gap-1"
-          >
-            <RiCustomerService2Line className="text-2xl" />
-            Contact
-          </li>
-        </ul>
       </div>
     </div>
   );

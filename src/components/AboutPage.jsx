@@ -2,7 +2,7 @@ import React from "react";
 
 export default function About() {
   return (
-    <div className="w-11/12 max-w-4xl mx-auto mt-50 font-pop">
+    <div className="w-11/12 max-w-4xl mx-auto mt-30 font-pop">
       <h1 className="text-4xl font-bold text-center text-[#000000] mb-6">
         About Us
       </h1>

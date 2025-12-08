@@ -23,26 +23,12 @@ export default function Footer() {
         <div>
           <h3 className="text-xl font-semibold mb-3">Quick Links</h3>
           <ul className="space-y-2 text-gray-400">
-            <li
-              onClick={() => (window.location.href = "/")}
-            >
-              Home
-            </li>
-            <li
-              onClick={() => (window.location.href = "/products")}
-            >
+            <li onClick={() => (window.location.href = "/")}>Home</li>
+            <li onClick={() => (window.location.href = "/products")}>
               Products
             </li>
-            <li
-              onClick={() => (window.location.href = "/about")}
-            >
-              About
-            </li>
-            <li
-              onClick={() => (window.location.href = "/contact")}
-            >
-              Contact
-            </li>
+            <li onClick={() => (window.location.href = "/about")}>About</li>
+            <li onClick={() => (window.location.href = "/contact")}>Contact</li>
           </ul>
         </div>
 

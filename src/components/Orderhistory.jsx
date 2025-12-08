@@ -44,7 +44,7 @@ export default function OrderHistory() {
   if (loading) return <p className="text-center mt-8">Loading...</p>;
 
   return (
-    <div className="w-11/12 mx-auto mt-50 max-w-3xl font-pop">
+    <div className="w-11/12 mx-auto mt-30 max-w-3xl font-pop">
       <h2 className="text-3xl font-bold text-center mb-6 text-[#000000]">
         Your Orders
       </h2>
