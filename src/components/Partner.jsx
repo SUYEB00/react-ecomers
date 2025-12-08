@@ -8,7 +8,10 @@ export default function PaymentDelivery({ className = "" }) {
   const payments = [
     { name: "bKash", src: "https://i.ibb.co.com/XZnyd5PX/Bkash.png" },
     { name: "Nagad", src: "https://i.ibb.co.com/LDZgD3tr/nagad.png" },
-    { name: "Rocket", src: "https://i.ibb.co.com/0pK7R7hS/rocket.png" },
+    {
+      name: "Rocket",
+      src: "https://i.ibb.co.com/XrjX7CXS/d6621b10013ac98c8b3b3bc7a03fbf6580b5be6ab5e35898b6a7942177963e90-200.jpg",
+    },
   ];
 
   const deliveries = [
@@ -22,7 +25,7 @@ export default function PaymentDelivery({ className = "" }) {
 
   return (
     <section
-      className={`bg-white dark:bg-gray-900 py-10 ${className}`}
+      className={`bg-white mt-5 dark:bg-gray-900 py-10 font-pop ${className}`}
       aria-labelledby="payment-delivery-heading"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -77,7 +77,7 @@ const Allproducts = () => {
         </div>
       ) : filteredProducts.length > 0 ? (
         <>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 p-2 rounded-2xl shadow bg-[#ffffff]">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 p-2 shadow bg-[#ffffff]">
             {visibleProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

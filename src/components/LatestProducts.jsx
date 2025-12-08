@@ -72,7 +72,7 @@ export default function LatestProducts() {
   };
 
   return (
-    <div className="w-11/12 mx-auto mb-6 rounded-2xl shadow bg-[#ffffff] p-3 mt-10">
+    <div className="w-11/12 mx-auto shadow bg-[#ffffff] p-3 mt-5">
       <h2 className="text-2xl font-pop font-bold ml-2  mb-3 text-[black]">
         Latest Products
       </h2>
@@ -110,7 +110,7 @@ export default function LatestProducts() {
 
                 <div
                   className="
-              flex text-[#f6a355] text-xs sm:text-sm"
+              flex text-yellow-400 text-xs sm:text-sm"
                 >
                   <FaStar /> <FaStar /> <FaStar /> <FaStar />{" "}
                   <FaRegStarHalfStroke />

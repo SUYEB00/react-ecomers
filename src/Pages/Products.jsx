@@ -6,7 +6,7 @@ const Products = () => {
   return (
     <div>
       <Navbar></Navbar>
-      <div className="mt-20">
+      <div className="mt-50">
         <Allproducts></Allproducts>
       </div>
     </div>

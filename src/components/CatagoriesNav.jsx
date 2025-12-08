@@ -12,8 +12,8 @@ const CatagoriesNav = ({ cetgories, selectCategory, setSelectCategory }) => {
             md:px-4 md:py-2 md:text-lg rounded-full font-medium transition-all duration-300
            ${
              selectCategory === cat
-               ? "bg-[#ad191b] text-white"
-               : "border border-red-500 text-[#ad191b] hover:bg-[#ad191b] hover:text-white"
+               ? "bg-[#000000] text-white"
+               : "border border-[#000000] text-[#000000] hover:bg-[#000000] hover:text-white"
            } 
             
             `}

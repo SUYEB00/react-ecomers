@@ -31,12 +31,12 @@ export default function Cart() {
   if (displayItems.length === 0) {
     return (
       <div className="w-11/12 mx-auto mt-10 text-center font-pop">
-        <h1 className="text-3xl font-bold text-[#ff8f9c]">
+        <h1 className="text-3xl font-bold text-[#000000]">
           Your Cart is Empty
         </h1>
         <button
           onClick={() => navigate("/")}
-          className="mt-6 bg-black text-white px-6 py-3 rounded-xl hover:bg-[#ff8f9c] transition"
+          className="mt-6 bg-black text-white px-6 py-3 rounded-xl"
         >
           Continue Shopping
         </button>
@@ -46,7 +46,7 @@ export default function Cart() {
 
   return (
     <div className="w-11/12 max-w-3xl mx-auto mt-6 font-pop">
-      <h1 className="text-3xl font-bold text-[#ff8f9c] mb-6">Shopping Cart</h1>
+      <h1 className="text-3xl font-bold text-[#000000] mb-6">Shopping Cart</h1>
 
       <div className="space-y-4">
         {displayItems.map((item) => (
@@ -88,7 +88,7 @@ export default function Cart() {
 
         <button
           onClick={() => navigate("/checkout")}
-          className="mt-4 w-full bg-black text-white py-3 rounded-xl hover:bg-[#ff8f9c] transition"
+          className="mt-4 w-full bg-black text-white py-3 rounded-xl"
         >
           Proceed to Checkout
         </button>

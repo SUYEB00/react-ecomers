@@ -93,7 +93,7 @@ export default function Login() {
           <p className="text-sm text-gray-600">Don’t have an account?</p>
           <p
             onClick={() => navigate("/signup")}
-            className="text-blue-600 text-sm cursor-pointer hover:underline"
+            className="text-[#000000] text-sm cursor-pointer hover:underline"
           >
             Sign Up
           </p>
@@ -103,7 +103,7 @@ export default function Login() {
         <input
           type="email"
           placeholder="Email address"
-          className="w-full mb-4 p-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 focus:border-blue-600 focus:outline-none transition"
+          className="w-full mb-4 p-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 focus:border-[#000000] focus:outline-none transition"
           onChange={(e) => setEmail(e.target.value)}
         />
 
@@ -111,21 +111,21 @@ export default function Login() {
         <input
           type="password"
           placeholder="Password"
-          className="w-full mb-2 p-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 focus:border-blue-600 focus:outline-none transition"
+          className="w-full mb-2 p-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 focus:border-[#000000] focus:outline-none transition"
           onChange={(e) => setPassword(e.target.value)}
         />
 
         {/* Forgot Password */}
         <p
           onClick={handleForgotPassword}
-          className="text-right text-sm text-blue-600 mb-4 cursor-pointer hover:underline"
+          className="text-right text-sm text-[#000000] mb-4 cursor-pointer hover:underline"
         >
           Forgot Password?
         </p>
 
         {/* Login Button */}
         <button
-          className="w-full p-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition mb-6"
+          className="w-full p-3 rounded-xl bg-[#000000] text-[#ffffff] font-semibold mb-6"
           onClick={handleLogin}
         >
           Login
@@ -157,14 +157,14 @@ export default function Login() {
         <div className="flex gap-2 justify-center mt-1 text-[13px]">
           <p
             onClick={() => navigate("/terms")}
-            className="text-blue-600 cursor-pointer hover:underline"
+            className="text-[#000000] cursor-pointer hover:underline"
           >
             Terms of use
           </p>
           <p className="text-gray-600">and</p>
           <p
             onClick={() => navigate("/privacy")}
-            className="text-blue-600 cursor-pointer hover:underline"
+            className="text-[#000000] cursor-pointer hover:underline"
           >
             Privacy policy
           </p>

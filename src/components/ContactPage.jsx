@@ -41,9 +41,9 @@ export default function Contact() {
   };
 
   return (
-    <div className="w-11/12 max-w-2xl mx-auto mt-35 font-pop">
+    <div className="w-11/12 max-w-2xl mx-auto mt-50 font-pop">
       <Toaster position="top-right" />
-      <h1 className="text-4xl font-bold text-center text-[#ff8f9c] mb-6">
+      <h1 className="text-4xl font-bold text-center text-[#000000] mb-6">
         Contact Us
       </h1>
 

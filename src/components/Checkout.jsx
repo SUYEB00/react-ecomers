@@ -117,7 +117,7 @@ export default function Checkout() {
 
   if (itemsToShow.length === 0)
     return (
-      <h2 className="text-4xl font-bold text-center text-[#ff8f9c] mt-10">
+      <h2 className="text-4xl font-bold text-center text-[#000000] mt-10">
         Your cart is empty
       </h2>
     );
@@ -126,7 +126,7 @@ export default function Checkout() {
     <div className="w-11/12 mx-auto mt-6 max-w-xl font-pop">
       <Toaster position="top-right" />
 
-      <h2 className="text-3xl font-bold text-center mb-6 text-[#ff8f9c]">
+      <h2 className="text-3xl font-bold text-center mb-6 text-[#000000]">
         Checkout
       </h2>
 
@@ -199,7 +199,7 @@ export default function Checkout() {
               key={pm.id}
               className={`flex items-center gap-3 p-3 mb-2 border rounded-xl cursor-pointer transition ${
                 selectedPayment?.id === pm.id
-                  ? "border-[#ff8f9c] bg-pink-50"
+                  ? "border-[#000000] bg-white"
                   : "bg-white"
               }`}
             >
@@ -229,7 +229,7 @@ export default function Checkout() {
         <button
           onClick={handleOrder}
           disabled={loading}
-          className="bg-black text-white text-lg px-4 py-3 w-full rounded-lg shadow mb-5 hover:bg-[#ff8f9c] transition"
+          className="bg-black text-white text-lg px-4 py-3 w-full rounded-lg shadow mb-5"
         >
           {loading ? "Confirming..." : "Confirm Order"}
         </button>

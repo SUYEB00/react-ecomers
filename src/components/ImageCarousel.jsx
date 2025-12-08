@@ -23,7 +23,7 @@ export default function Carousel() {
   }, []);
 
   return (
-    <div className="w-11/12 mx-auto flex justify-center mt-30">
+    <div className="w-11/12 mx-auto flex justify-center mt-50">
       <Swiper
         modules={[Pagination, Autoplay]}
         pagination={{ clickable: true }}
@@ -47,7 +47,6 @@ export default function Carousel() {
             xl:h-[550px]       /* Large screens */
             object-center 
             object-cover 
-            rounded-lg 
             shadow-sm
           "
             />

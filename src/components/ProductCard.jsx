@@ -44,14 +44,14 @@ const ProductCard = ({ product }) => {
         <div className="flex flex-col sm:flex-row gap-1 mt-2">
           <button
             onClick={handleAddToCart}
-            className="w-full sm:w-1/2 bg-black text-white rounded-lg py-1 text-xs hover:bg-pink-400 transition"
+            className="w-full sm:w-1/2 bg-[#000000] text-[#ffffff] rounded-lg py-1 text-xs"
           >
             Add to Cart
           </button>
 
           <button
             onClick={handleBuyNow}
-            className="w-full sm:w-1/2 bg-pink-400 text-white rounded-lg py-1 text-xs hover:bg-black transition"
+            className="w-full sm:w-1/2 bg-[#000000] text-[#ffffff] rounded-lg py-1 text-xs"
           >
             Buy Now
           </button>
