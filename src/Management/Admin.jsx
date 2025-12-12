@@ -87,7 +87,11 @@ const AddProduct = () => {
     e.preventDefault();
 
     try {
-      await addDoc(collection(db, "Products"), product);
+      await addDoc(collection(db, "Products"), {
+        ...product,
+        createdAt: new Date().toISOString(), // <-- ADD THIS
+      });
+
       toast.success("Product added!");
 
       setProduct({
@@ -170,7 +174,7 @@ const AddProduct = () => {
       <h2 className="text-2xl font-bold mb-5">1. Order Management</h2>
       <button
         onClick={() => navigate("/ordermanagement")}
-        className="px-4 py-2 bg-red-500 text-white rounded mb-5"
+        className="px-4 py-2 bg-[#000000] text-white rounded mb-5"
       >
         Order Management
       </button>
@@ -179,7 +183,7 @@ const AddProduct = () => {
       <h2 className="text-2xl font-bold mb-5">2. Message Management</h2>
       <button
         onClick={() => navigate("/messagemanagement")}
-        className="px-4 py-2 bg-red-500 text-white rounded mb-5"
+        className="px-4 py-2 bg-[#000000] text-white rounded mb-5"
       >
         Message Management
       </button>
@@ -188,7 +192,7 @@ const AddProduct = () => {
       <h2 className="text-2xl font-bold mb-5">3. User Management</h2>
       <button
         onClick={() => navigate("/usermanagement")}
-        className="px-4 py-2 bg-red-500 text-white rounded mb-5"
+        className="px-4 py-2 bg-[#000000] text-white rounded mb-5"
       >
         User Management
       </button>
@@ -208,7 +212,7 @@ const AddProduct = () => {
 
         <button
           type="submit"
-          className="px-4 py-2 bg-red-500 text-white rounded mb-5"
+          className="px-4 py-2 bg-[#000000] text-white rounded mb-5"
         >
           Add Slider
         </button>
@@ -219,8 +223,7 @@ const AddProduct = () => {
 
       {/* TOTAL SLIDER */}
       <div className="mb-5 text-xl font-semibold text-[#21214c]">
-        Total Sliders:{" "}
-        <span className="text-[#ff8f9c]">{sliderList.length}</span>
+        Total Sliders: <span className="text-red-500">{sliderList.length}</span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
@@ -234,7 +237,7 @@ const AddProduct = () => {
 
               <button
                 onClick={() => deleteSlider(item.id)}
-                className="bg-red-500 text-white px-3 py-1 rounded"
+                className="bg-[#000000] text-white px-3 py-1 rounded"
               >
                 Delete
               </button>
@@ -267,7 +270,7 @@ const AddProduct = () => {
 
         <button
           type="submit"
-          className="px-4 py-2 bg-red-500 text-white rounded mb-5"
+          className="px-4 py-2 bg-[#000000] text-white rounded mb-5"
         >
           Add Payment Method
         </button>
@@ -279,7 +282,7 @@ const AddProduct = () => {
       {/* TOTAL PAYMENTS METHOD */}
       <div className="mb-5 text-xl font-semibold text-[#21214c]">
         Total Payment Method:{" "}
-        <span className="text-[#ff8f9c]">{paymentList.length}</span>
+        <span className="text-red-500">{paymentList.length}</span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
@@ -295,7 +298,7 @@ const AddProduct = () => {
 
             <button
               onClick={() => deletePayment(item.id)}
-              className="bg-red-500 text-white px-3 py-1 rounded"
+              className="bg-[#000000] text-white px-3 py-1 rounded"
             >
               Delete
             </button>
@@ -363,7 +366,7 @@ const AddProduct = () => {
 
         <button
           type="submit"
-          className="px-4 py-2 bg-red-500 text-white rounded"
+          className="px-4 py-2 bg-[#000000] text-white rounded"
         >
           Add Product
         </button>
@@ -375,7 +378,7 @@ const AddProduct = () => {
       {/* TOTAL PRODUCTS */}
       <div className="mb-5 text-xl font-semibold text-[#21214c]">
         Total Products:{" "}
-        <span className="text-[#ff8f9c]">{productsList.length}</span>
+        <span className="text-red-500">{productsList.length}</span>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-6 gap-6">
@@ -394,7 +397,7 @@ const AddProduct = () => {
 
             <button
               onClick={() => deleteProduct(item.id)}
-              className="bg-red-500 text-white px-3 py-1 rounded mt-3 mb-3"
+              className="bg-[#000000] text-white px-3 py-1 rounded mt-3 mb-3"
             >
               Delete
             </button>

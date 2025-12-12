@@ -14,7 +14,7 @@ export default function Navbar() {
   const [user, setUser] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
-  const adminEmail = "suaibhasan00@gmail.com";
+  const adminEmail = "suaibhasan845@gmail.com";
   const [isAdmin, setIsAdmin] = useState(false);
 
   const { cart } = useCart();
@@ -168,6 +168,15 @@ export default function Navbar() {
                 {user ? (
                   <div className="border-b pb-3 mb-3 text-center">
                     <p className="text-sm break-all">{user.email}</p>
+
+                    {isAdmin && (
+                      <button
+                        onClick={() => navigate("/admin")}
+                        className="mt-2 w-full flex items-center justify-center gap-2 bg-black text-white py-2 rounded-xl text-sm"
+                      >
+                        Admin Panel
+                      </button>
+                    )}
 
                     <button
                       onClick={logout}

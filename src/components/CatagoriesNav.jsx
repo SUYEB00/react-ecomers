@@ -7,16 +7,14 @@ const CatagoriesNav = ({ cetgories, selectCategory, setSelectCategory }) => {
         <button
           key={cat}
           onClick={() => setSelectCategory(cat)}
-          className={`px-2 py-1 text-sm
-            sm:px-3 sm:py-1.5 sm:text-base 
-            md:px-4 md:py-2 md:text-lg rounded-full font-medium transition-all duration-300
-           ${
-             selectCategory === cat
-               ? "bg-[#000000] text-white"
-               : "border border-[#000000] text-[#000000] hover:bg-[#000000] hover:text-white"
-           } 
-            
-            `}
+          className={`px-3 py-1 text-sm sm:px-4 sm:py-1.5 sm:text-base 
+            rounded-md font-medium transition-all duration-200
+            ${
+              selectCategory === cat
+                ? "bg-black text-white shadow-sm"
+                : "border border-gray-600 text-gray-800 hover:bg-black hover:text-white"
+            }
+          `}
         >
           {cat}
         </button>

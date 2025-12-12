@@ -18,7 +18,17 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <div className="font-mon border border-gray-200 rounded-xl bg-white p-3 sm:p-3 shadow-sm hover:shadow-lg transition-transform duration-300 transform hover:scale-105 max-w-[200px] sm:max-w-xs mx-auto">
+    <div className="relative font-mon border border-gray-200 rounded-xl bg-white p-3 sm:p-3 shadow-sm hover:shadow-lg transition-transform duration-300 transform hover:scale-105 max-w-[200px] sm:max-w-xs mx-auto">
+      {/* Discount Circle */}
+      <div className="absolute top-2 left-2 bg-red-600 text-white text-[10px] sm:text-xs font-bold w-7 h-7 sm:w-9 sm:h-9 flex items-center justify-center rounded-full shadow-md">
+        {Math.round(
+          ((Number(product.oldprice) - Number(product.newprice)) /
+            Number(product.oldprice)) *
+            100
+        )}
+        %
+      </div>
+
       <img
         src={product.product_picture}
         alt={product.title}

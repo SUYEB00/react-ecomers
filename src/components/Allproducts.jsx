@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import CatagoriesNav from "./CatagoriesNav";
 import toast from "react-hot-toast";
-import ProductCard from "./ProductCard";
+import ProductCard from "../produts/ProductCard";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { useLocation } from "react-router-dom";
+import { FiGrid } from "react-icons/fi";
 
 const Allproducts = () => {
   const [products, setProducts] = useState([]);
@@ -60,7 +61,7 @@ const Allproducts = () => {
   const categories = ["All", ...new Set(products.map((m) => m.category))];
   const visibleProducts = showAll
     ? filteredProducts
-    : filteredProducts.slice(0, 8);
+    : filteredProducts.slice(0, 12);
 
   return (
     <div className="w-11/12 mx-auto">
@@ -73,11 +74,14 @@ const Allproducts = () => {
       </div>
       {loading ? (
         <div className="flex justify-center items-center h-64">
-          <span className="loading loading-dots loading-5xl text-[#ad191b]"></span>
+          <span className="loading loading-dots loading-5xl text-[#000000]"></span>
         </div>
       ) : filteredProducts.length > 0 ? (
         <>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 p-2 shadow bg-[#ffffff]">
+          <h2 className="text-2xl font-pop font-bold ml-2 mb-4 text-black flex items-center gap-2">
+            <FiGrid className="text-blue-500" /> All Products
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 shadow bg-[#ffffff] p-3 rounded-2xl">
             {visibleProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

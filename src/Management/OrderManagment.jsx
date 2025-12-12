@@ -53,12 +53,12 @@ export default function AdminOrders() {
     <div className="w-11/12 mx-auto mt-10 font-pop">
       <Toaster position="top-right" />
 
-      <h1 className="text-3xl font-bold text-center text-[#ff8f9c] mb-6">
+      <h1 className="text-3xl font-bold text-center text-[#000000] mb-6">
         Order Management
       </h1>
 
       <div className="mb-5 text-xl font-semibold text-[#21214c]">
-        Total Orders: <span className="text-[#ff8f9c]">{orders.length}</span>
+        Total Orders: <span className="text-red-500">{orders.length}</span>
       </div>
 
       <div className="overflow-x-auto">

@@ -35,13 +35,13 @@ export default function UserManagement() {
 
   return (
     <div className="p-5 w-11/12 mx-auto font-pop">
-      <h1 className="text-3xl font-bold mb-5 text-[#ff8f9c]">
+      <h1 className="text-3xl font-bold mb-5 text-[#000000]">
         User Management
       </h1>
 
       {/* TOTAL USERS */}
       <div className="mb-5 text-xl font-semibold text-[#21214c]">
-        Total Users: <span className="text-[#ff8f9c]">{users.length}</span>
+        Total Users: <span className="text-red-500">{users.length}</span>
       </div>
 
       {/* USERS TABLE */}
@@ -69,7 +69,7 @@ export default function UserManagement() {
                 <td className="p-3">
                   <button
                     onClick={() => deleteUser(u.id)}
-                    className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600"
+                    className="bg-[#000000] text-white px-3 py-1 rounded-lg hover:bg-red-600"
                   >
                     Delete
                   </button>

@@ -11,6 +11,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext"; // <= use buyNow
+import { FiTrendingUp } from "react-icons/fi";
 
 export default function LatestProducts() {
   const [products, setProducts] = useState([]);
@@ -72,9 +73,9 @@ export default function LatestProducts() {
   };
 
   return (
-    <div className="w-11/12 mx-auto shadow bg-[#ffffff] p-3 mt-5">
-      <h2 className="text-2xl font-pop font-bold ml-2  mb-3 text-[black]">
-        Latest Products
+    <div className="w-11/12 mx-auto shadow bg-[#ffffff] p-3 mt-5 rounded-2xl">
+      <h2 className="text-2xl font-pop font-bold ml-2 mb-3 text-black flex items-center gap-2">
+        <FiTrendingUp className="text-blue-500" /> Latest Products
       </h2>
 
       <Swiper
@@ -92,11 +93,15 @@ export default function LatestProducts() {
           <SwiperSlide key={product.id}>
             <button
               type="button"
-              className="
-    block border border-gray-200 rounded-xl bg-white shadow-sm 
+              className="relative block border border-gray-200 rounded-xl bg-white shadow-sm 
     transition-transform duration-300 hover:scale-105 mt-2 mb-2 p-2 w-[140px] mx-auto sm:p-3 sm:w-[180px] lg:w-[200px] lg:p-3"
               onClick={() => openCheckout(product)}
             >
+              {/* Latest Badge */}
+              <div className="absolute top-2 left-2 bg-blue-600 text-white text-[10px] sm:text-xs font-bold px-2 py-1 rounded-full shadow">
+                Latest
+              </div>
+
               <img
                 src={product.product_picture}
                 alt={product.title}
@@ -108,10 +113,7 @@ export default function LatestProducts() {
                   {product.title}
                 </h3>
 
-                <div
-                  className="
-              flex text-yellow-400 text-xs sm:text-sm"
-                >
+                <div className="flex text-yellow-400 text-xs sm:text-sm">
                   <FaStar /> <FaStar /> <FaStar /> <FaStar />{" "}
                   <FaRegStarHalfStroke />
                 </div>
