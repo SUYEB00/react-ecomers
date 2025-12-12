@@ -89,7 +89,7 @@ const Allproducts = () => {
           {filteredProducts.length > 12 && (
             <div className="flex justify-center mt-8">
               <button
-                className="px-6 py-2 rounded-full font-medium transition-all duration-300 border border-red-500 text-[#ad191b] hover:bg-[#ad191b] hover:text-white mb-5"
+                className="px-6 py-2 rounded-full font-medium transition-all duration-300 border border-[#000000] text-[#000000] hover:bg-[#000000] hover:text-white mb-5"
                 onClick={() => setShowall(!showAll)}
               >
                 {showAll ? "Show Less" : "Show More"}
