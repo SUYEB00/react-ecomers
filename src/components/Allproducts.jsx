@@ -98,7 +98,7 @@ const Allproducts = () => {
           )}
         </>
       ) : (
-        <p className="text-4xl font-bold text-center text-[#ff8f9c] font-pop">
+        <p className="text-4xl font-bold text-center text-[#000000] font-pop">
           No Products Found
         </p>
       )}
