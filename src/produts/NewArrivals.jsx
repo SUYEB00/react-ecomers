@@ -20,10 +20,13 @@ export default function NewArrivals() {
     const fetchProducts = async () => {
       const snapshot = await getDocs(collection(db, "Products"));
 
-      let data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+      let data = snapshot.docs
+        .map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+        // ❌ remove 0 stock products
+        .filter((p) => Number(p.stock) > 0);
 
       // Sort by createdAt (newest first)
       const sorted = data

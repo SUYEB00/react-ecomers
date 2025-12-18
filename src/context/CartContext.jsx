@@ -8,7 +8,7 @@ export const CartProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : [];
   });
 
-  const [buyNowItem, setBuyNowItem] = useState(null); // 🔥 New
+  const [buyNowItem, setBuyNowItem] = useState(null);
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
@@ -24,12 +24,24 @@ export const CartProvider = ({ children }) => {
             : item
         );
       }
-      return [...prev, { ...product, quantity: 1 }];
+
+      return [
+        ...prev,
+        {
+          ...product,
+          sizes: product.sizes || [], // ✅ FIX
+          quantity: 1,
+        },
+      ];
     });
   };
 
   const buyNow = (product) => {
-    setBuyNowItem({ ...product, quantity: 1 }); // 🔥 new
+    setBuyNowItem({
+      ...product,
+      sizes: product.sizes || [], // ✅ FIX
+      quantity: 1,
+    });
   };
 
   const removeFromCart = (id) => {
@@ -37,8 +49,7 @@ export const CartProvider = ({ children }) => {
   };
 
   const clearCart = () => setCart([]);
-
-  const clearBuyNow = () => setBuyNowItem(null); // 🔥 new
+  const clearBuyNow = () => setBuyNowItem(null);
 
   return (
     <CartContext.Provider

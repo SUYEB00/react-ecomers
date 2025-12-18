@@ -21,6 +21,10 @@ import PrivacyPolicy from "./components/PrivacyPolicy";
 import { CartProvider } from "./context/CartContext";
 import Cart from "./Pages/Cart";
 import ProductDetails from "./Pages/ProductDetailsPage";
+import AddSlider from "./Management/AddSlider";
+import AddPaymentNumber from "./Management/AddPaymentNumber";
+import AddProducts from "./Management/AddProducts";
+import AdminRoute from "./Management/AdminRoute";
 
 const router = createBrowserRouter([
   {
@@ -34,10 +38,6 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <Signup />,
-  },
-  {
-    path: "/admin",
-    element: <Admin />,
   },
   {
     path: "/checkout",
@@ -60,18 +60,6 @@ const router = createBrowserRouter([
     element: <Contact />,
   },
   {
-    path: "/ordermanagement",
-    element: <OrderManagment />,
-  },
-  {
-    path: "/messagemanagement",
-    element: <MessageManagement />,
-  },
-  {
-    path: "/usermanagement",
-    element: <UserManagement />,
-  },
-  {
     path: "/terms",
     element: <TermsOfUse />,
   },
@@ -83,11 +71,65 @@ const router = createBrowserRouter([
     path: "/cart",
     element: <Cart></Cart>,
   },
-  ,
   {
     path: "/product/:id",
-    element: 
-    <ProductDetails></ProductDetails>,
+    element: <ProductDetails></ProductDetails>,
+  },
+  {
+    path: "/admin",
+    element: (
+      <AdminRoute>
+        <Admin />
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/ordermanagement",
+    element: (
+      <AdminRoute>
+        <OrderManagment />
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/messagemanagement",
+    element: (
+      <AdminRoute>
+        <MessageManagement />
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/usermanagement",
+    element: (
+      <AdminRoute>
+        <UserManagement />
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/addslider",
+    element: (
+      <AdminRoute>
+        <AddSlider />
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/addpaymentnumber",
+    element: (
+      <AdminRoute>
+        <AddPaymentNumber />
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/addproducts",
+    element: (
+      <AdminRoute>
+        <AddProducts />
+      </AdminRoute>
+    ),
   },
 ]);
 

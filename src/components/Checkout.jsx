@@ -13,12 +13,23 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import Swal from "sweetalert2";
 import { IoCashOutline } from "react-icons/io5";
+import {
+  HiOutlineCreditCard,
+  HiOutlineLocationMarker,
+  HiOutlineMail,
+  HiOutlineShoppingCart,
+  HiOutlineUser,
+} from "react-icons/hi";
+import { MdOutlineStickyNote2 } from "react-icons/md";
 
 export default function Checkout() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [deliveryCharge, setDeliveryCharge] = useState(0);
+
   const { cart, clearCart, buyNowItem, clearBuyNow } = useCart();
+  const itemsToShow = buyNowItem ? [buyNowItem] : cart;
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -27,16 +38,7 @@ export default function Checkout() {
     return unsubscribe;
   }, [navigate]);
 
-  const DELIVERY_CHARGE = 80;
-
-  const itemsToShow = buyNowItem ? [buyNowItem] : cart; // IMPORTANT
-
-  const totalProductPrice = itemsToShow.reduce(
-    (total, item) => total + item.quantity * Number(item.newprice),
-    0
-  );
-
-  const subTotal = totalProductPrice + DELIVERY_CHARGE;
+  const productWithSizes = itemsToShow.find((item) => item?.sizes?.length > 0);
 
   const [form, setForm] = useState({
     name: "",
@@ -55,6 +57,18 @@ export default function Checkout() {
   const [selectedPayment, setSelectedPayment] = useState(null);
 
   useEffect(() => {
+    const fetchDeliveryCharge = async () => {
+      const snap = await getDocs(collection(db, "Settings"));
+      snap.forEach((doc) => {
+        if (doc.id === "DeliveryCharge") {
+          setDeliveryCharge(Number(doc.data().charge));
+        }
+      });
+    };
+    fetchDeliveryCharge();
+  }, []);
+
+  useEffect(() => {
     const fetchPayments = async () => {
       const snap = await getDocs(collection(db, "PaymentMethods"));
       const list = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
@@ -68,12 +82,17 @@ export default function Checkout() {
   const [loading, setLoading] = useState(false);
 
   const handleOrder = async () => {
-    if (!form.name || !form.email || !form.address || !form.trxId)
+    if (!form.name || !form.address) {
       return toast.error("Please fill all required fields");
+    }
 
-    if (!form.size) return toast.error("Please select a size");
+    if (productWithSizes && !form.size) {
+      return toast.error("Please select a size");
+    }
 
-    if (!selectedPayment) return toast.error("Please select a payment method");
+    if (selectedPayment?.payment_type !== "COD" && !form.trxId) {
+      return toast.error("Transaction ID is required");
+    }
 
     setLoading(true);
 
@@ -85,19 +104,27 @@ export default function Checkout() {
           title: item.title,
           price: item.newprice,
           quantity: item.quantity,
+          size: form.size || null,
         })),
-        deliveryCharge: DELIVERY_CHARGE,
-        totalPrice: subTotal,
-        name: form.name,
-        email: form.email,
-        address: form.address,
-        trxId: form.trxId,
 
-        size: form.size, // ✅ NEW
-        note: form.note, // ✅ NEW
+        productTotal: totalProductPrice,
+        deliveryCharge,
+        totalPrice: grandTotal,
+
+        codPayable: selectedPayment?.payment_type === "COD" ? grandTotal : 0,
+
+        onlinePaid: selectedPayment?.payment_type === "COD" ? 0 : grandTotal,
+
+        trxId: selectedPayment?.payment_type === "COD" ? "COD" : form.trxId,
 
         payment_type: selectedPayment.payment_type,
         payment_no: selectedPayment.payment_no,
+
+        name: form.name,
+        email: form.email,
+        address: form.address,
+        note: form.note,
+
         status: "pending",
         date: serverTimestamp(),
       });
@@ -130,34 +157,55 @@ export default function Checkout() {
       </h2>
     );
 
+  const totalProductPrice = itemsToShow.reduce(
+    (total, item) => total + item.quantity * Number(item.newprice),
+    0
+  );
+
+  const grandTotal = totalProductPrice + deliveryCharge;
+
   return (
     <div className="w-11/12 mx-auto mt-6 max-w-xl font-pop">
       <Toaster position="top-right" />
 
-      <h2 className="text-3xl font-bold text-center mb-6 text-[#000000]">
+      <h2 className="text-3xl font-bold text-center mb-2 text-black flex justify-center items-center gap-2">
+        <HiOutlineShoppingCart className="text-3xl" />
         Checkout
       </h2>
 
-      <div className="w-full mb-4 p-3 border border-gray-300 rounded-xl space-y-3">
+      <p className="text-center text-sm text-gray-500 mb-6">
+        Review your order and confirm payment
+      </p>
+
+      {/* Order Summary */}
+      <div className="w-full mb-4 p-4 border border-gray-300 rounded-xl space-y-4 bg-white">
         {itemsToShow.map((item) => (
-          <div key={item.id} className="border-b pb-3">
-            <div className="flex items-center gap-3">
+          <div key={item.id} className="border-b last:border-b-0 pb-3">
+            <div className="flex items-center gap-4">
               <img
                 src={item.product_picture}
                 alt={item.title}
-                className="w-20 h-20 rounded-lg border"
+                className="w-20 h-20 rounded-xl border object-cover"
               />
 
-              <div>
+              <div className="flex-1">
                 <h3 className="text-lg font-semibold">{item.title}</h3>
                 <p className="text-black font-bold">{item.newprice} BDT</p>
-                <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
+
+                <div className="flex gap-3 text-sm text-gray-600 mt-1">
+                  <span>Qty: {item.quantity}</span>
+                  {item.size && (
+                    <span className="px-2 py-0.5 bg-gray-100 rounded-md text-xs">
+                      Size: {item.size}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         ))}
 
-        <div className="mt-5">
+        <div className="bg-gray-50 rounded-xl p-4">
           <p className="flex justify-between text-lg">
             <span>Product Total</span>
             <span>{totalProductPrice} BDT</span>
@@ -165,85 +213,109 @@ export default function Checkout() {
 
           <p className="flex justify-between text-lg mt-2">
             <span>Delivery Charge</span>
-            <span>{DELIVERY_CHARGE} BDT</span>
+            <span>{deliveryCharge} BDT</span>
           </p>
 
           <hr className="my-3" />
 
           <p className="flex justify-between text-xl font-bold">
-            <span>Subtotal</span>
-            <span>{subTotal} BDT</span>
+            <span>Total Payable</span>
+            <span>{grandTotal} BDT</span>
           </p>
         </div>
       </div>
 
+      {/* Customer Info */}
       <div className="mt-6 space-y-4">
-        <input
-          name="name"
-          onChange={handleChange}
-          placeholder="Your Name"
-          className="w-full mb-4 p-3 border rounded-xl"
-        />
-
-        <input
-          name="email"
-          onChange={handleChange}
-          placeholder="Your Email"
-          className="w-full mb-4 p-3 border rounded-xl"
-        />
-
-        <textarea
-          name="address"
-          onChange={handleChange}
-          placeholder="Full Address"
-          className="w-full mb-4 p-3 border rounded-xl"
-        ></textarea>
-
-        {/* Size Selection */}
-        <div className="w-full mb-4">
-          <label className="block mb-1 font-semibold">Select Size</label>
-          <select
-            name="size"
-            value={form.size}
+        <div className="flex items-center gap-2 bg-gray-50 border border-gray-300 rounded-xl p-3">
+          <HiOutlineUser className="text-xl text-gray-500" />
+          <input
+            name="name"
             onChange={handleChange}
-            className="w-full p-3 border rounded-xl"
-          >
-            <option value="">Choose size</option>
-            <option value="S">Small (S)</option>
-            <option value="M">Medium (M)</option>
-            <option value="L">Large (L)</option>
-            <option value="XL">Extra Large (XL)</option>
-            <option value="Custom">Custom</option>
-          </select>
+            placeholder="Your Name"
+            className="w-full bg-transparent outline-none"
+          />
         </div>
 
-        {/* Order Note */}
-        <textarea
-          name="note"
-          onChange={handleChange}
-          placeholder="Order note (color, size details, delivery instructions etc.)"
-          className="w-full mb-4 p-3 border rounded-xl"
-        />
+        <div className="flex items-center gap-2 bg-gray-50 border border-gray-300 rounded-xl p-3">
+          <HiOutlineMail className="text-xl text-gray-500" />
+          <input
+            name="email"
+            onChange={handleChange}
+            placeholder="Your Email"
+            className="w-full bg-transparent outline-none"
+          />
+        </div>
 
-        <div className="w-full mb-4 p-3 border border-gray-300 rounded-xl">
-          <h3 className="text-lg font-bold mb-2">Select Payment Method</h3>
+        <div className="flex items-start gap-2 bg-gray-50 border border-gray-300 rounded-xl p-3">
+          <HiOutlineLocationMarker className="text-xl text-gray-500 mt-1" />
+          <textarea
+            name="address"
+            onChange={handleChange}
+            placeholder="Full Address"
+            className="w-full bg-transparent outline-none resize-none"
+          />
+        </div>
+
+        {productWithSizes && (
+          <div>
+            <label className="block mb-1 font-semibold">Select Size</label>
+            <select
+              name="size"
+              value={form.size}
+              onChange={handleChange}
+              className="w-full p-3 border rounded-xl"
+              required
+            >
+              <option value="">Choose size</option>
+              {productWithSizes.sizes.map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        <div className="flex items-start gap-2 bg-gray-50 border border-gray-300 rounded-xl p-3">
+          <MdOutlineStickyNote2 className="text-xl text-gray-500 mt-1" />
+          <textarea
+            name="note"
+            onChange={handleChange}
+            placeholder="Order note (optional)"
+            className="w-full bg-transparent outline-none resize-none"
+          />
+        </div>
+
+        {/* Payment Method */}
+        <div className="w-full p-4 border border-gray-300 rounded-xl">
+          <h3 className="text-lg font-bold mb-3 flex items-center gap-2">
+            <HiOutlineCreditCard className="text-xl" />
+            Payment Method
+          </h3>
 
           {paymentMethods.map((pm) => (
             <label
               key={pm.id}
-              className={`flex items-center gap-3 p-3 mb-2 border rounded-xl cursor-pointer transition ${
-                selectedPayment?.id === pm.id
-                  ? "border-[#000000] bg-white"
-                  : "bg-white"
-              }`}
+              className={`flex items-center gap-3 p-4 mb-2 border rounded-xl cursor-pointer transition
+          ${
+            selectedPayment?.id === pm.id
+              ? "border-black bg-gray-50"
+              : "bg-white"
+          }`}
             >
               <input
                 type="radio"
                 checked={selectedPayment?.id === pm.id}
                 onChange={() => setSelectedPayment(pm)}
               />
-              <div className="flex items-center gap-3">
-                <IoCashOutline className="text-xl mb-1" />
+
+              <div className="flex items-center gap-2">
+                {pm.payment_type === "COD" ? (
+                  <IoCashOutline className="text-xl" />
+                ) : (
+                  <HiOutlineCreditCard className="text-xl" />
+                )}
                 <div>
                   <p className="font-semibold">{pm.payment_type}</p>
                   <p className="text-sm text-gray-600">{pm.payment_no}</p>
@@ -251,21 +323,62 @@ export default function Checkout() {
               </div>
             </label>
           ))}
+
+          {selectedPayment?.payment_type === "COD" ? (
+            <div className="mt-3 p-4 rounded-xl bg-yellow-50 border border-yellow-300 text-sm text-yellow-800 space-y-1">
+              <div className="flex items-center gap-2 font-semibold">
+                <IoCashOutline className="text-lg" />
+                Cash on Delivery
+              </div>
+
+              <p>
+                Pay <strong>{grandTotal} BDT</strong> directly to the delivery
+                person at the time of delivery.
+              </p>
+
+              <p className="text-xs text-yellow-700">
+                No online payment is required. Please keep the full amount ready
+                in cash.
+              </p>
+            </div>
+          ) : (
+            <div className="mt-3 p-4 rounded-xl bg-blue-50 border border-blue-300 text-sm text-blue-800 space-y-1">
+              <div className="flex items-center gap-2 font-semibold">
+                <HiOutlineCreditCard className="text-lg" />
+                Online Payment
+              </div>
+
+              <p>
+                Pay <strong>{grandTotal} BDT</strong> to:
+              </p>
+
+              <p className="font-semibold">
+                {selectedPayment?.payment_type} – {selectedPayment?.payment_no}
+              </p>
+
+              <p className="text-xs text-blue-700">
+                After payment, please enter your transaction ID below.
+              </p>
+            </div>
+          )}
         </div>
 
-        <input
-          name="trxId"
-          onChange={handleChange}
-          placeholder="Transaction ID"
-          className="w-full mb-4 p-3 border rounded-xl"
-        />
+        {selectedPayment?.payment_type !== "COD" && (
+          <input
+            name="trxId"
+            onChange={handleChange}
+            placeholder="Transaction ID"
+            className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl"
+            required
+          />
+        )}
 
         <button
           onClick={handleOrder}
           disabled={loading}
-          className="bg-black text-white text-lg px-4 py-3 w-full rounded-lg shadow mb-5"
+          className="bg-black hover:bg-gray-900 text-white text-lg px-4 py-3 w-full rounded-xl shadow-md transition mb-5"
         >
-          {loading ? "Confirming..." : "Confirm Order"}
+          {loading ? "Placing Order..." : "Confirm Order"}
         </button>
       </div>
     </div>

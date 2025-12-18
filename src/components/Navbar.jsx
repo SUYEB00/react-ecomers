@@ -9,12 +9,13 @@ import { FiLogIn, FiLogOut, FiUserPlus } from "react-icons/fi";
 import { RiCustomerService2Line } from "react-icons/ri";
 import { HiOutlineClipboardList, HiOutlineShoppingBag } from "react-icons/hi";
 import { AiOutlineHome } from "react-icons/ai";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 export default function Navbar() {
   const [user, setUser] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
-  const adminEmail = "suaibhasan845@gmail.com";
   const [isAdmin, setIsAdmin] = useState(false);
 
   const { cart } = useCart();
@@ -72,6 +73,27 @@ export default function Navbar() {
     if (!searchTerm) return;
     navigate(`/products?search=${searchTerm}`);
   };
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      setUser(user);
+
+      if (!user) {
+        setIsAdmin(false);
+        return;
+      }
+
+      const snap = await getDoc(doc(db, "Users", user.uid));
+
+      if (snap.exists() && snap.data().role === "admin") {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+      }
+    });
+
+    return unsubscribe;
+  }, []);
 
   // Keep user logged in
   useEffect(() => {

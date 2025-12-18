@@ -20,10 +20,13 @@ export default function BestDeals() {
     const fetchProducts = async () => {
       const snapshot = await getDocs(collection(db, "Products"));
 
-      let data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+      let data = snapshot.docs
+        .map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+        // ✅ hide 0 stock products
+        .filter((p) => Number(p.stock) > 0);
 
       // calculate discount %
       data = data.map((p) => ({
@@ -33,7 +36,7 @@ export default function BestDeals() {
         ),
       }));
 
-      // sort by highest discount
+      // sort by highest discount & take top 6
       const top6 = data
         .sort((a, b) => b.discountPercent - a.discountPercent)
         .slice(0, 6);

@@ -50,6 +50,7 @@ const ProductDetails = () => {
       newprice: product.newprice,
       product_picture: product.product_picture,
       quantity: 1,
+      sizes: product.sizes || [],
     });
 
     navigate("/checkout");
@@ -63,6 +64,7 @@ const ProductDetails = () => {
       newprice: product.newprice,
       product_picture: product.product_picture,
       quantity: 1,
+      sizes: product.sizes || [],
     });
   };
 

@@ -1,24 +1,67 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../firebase"; // make sure your firebase config is correct
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  query,
+  where,
+  onSnapshot,
+  orderBy,
+} from "firebase/firestore";
+import { auth, db } from "../firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function Contact() {
+  const [userEmail, setUserEmail] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   const [form, setForm] = useState({
     name: "",
-    email: "",
     message: "",
   });
 
-  const [loading, setLoading] = useState(false);
+  /* ------------------ AUTH + HISTORY ------------------ */
+  useEffect(() => {
+    let unsubscribeMessages = null;
 
+    const unsubAuth = onAuthStateChanged(auth, (user) => {
+      if (!user) return;
+
+      setUserEmail(user.email);
+
+      const q = query(
+        collection(db, "ContactMessages"),
+        where("email", "==", user.email),
+        orderBy("createdAtClient", "desc")
+      );
+
+      unsubscribeMessages = onSnapshot(q, (snapshot) => {
+        setMessages(
+          snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
+        );
+      });
+    });
+
+    return () => {
+      unsubAuth();
+      if (unsubscribeMessages) unsubscribeMessages();
+    };
+  }, []);
+
+  /* ------------------ FORM ------------------ */
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.message) {
+
+    if (!form.name || !form.message) {
       return toast.error("Please fill all fields");
     }
 
@@ -26,15 +69,21 @@ export default function Contact() {
 
     try {
       await addDoc(collection(db, "ContactMessages"), {
-        ...form,
-        date: serverTimestamp(),
+        name: form.name,
+        email: auth.currentUser.email,
+        message: form.message,
+
+        reply: "",
+        replied: false,
+
+        createdAt: serverTimestamp(),
+        createdAtClient: Date.now(), // ✅ ADD THIS
       });
 
-      toast.success("Message sent successfully!");
-      setForm({ name: "", email: "", message: "" });
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to send message!");
+      toast.success("Message sent!");
+      setForm((prev) => ({ ...prev, message: "" }));
+    } catch (err) {
+      toast.error("Failed to send message");
     }
 
     setLoading(false);
@@ -43,14 +92,8 @@ export default function Contact() {
   return (
     <div className="w-11/12 max-w-2xl mx-auto mt-30 font-pop">
       <Toaster position="top-right" />
-      <h1 className="text-4xl font-bold text-center text-[#000000] mb-6">
-        Contact Us
-      </h1>
 
-      <p className="text-center text-gray-700 mb-6">
-        Have a question or suggestion? Send us a message and we will get back to
-        you as soon as possible.
-      </p>
+      <h1 className="text-4xl font-bold text-center mb-6">Contact Us</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
@@ -58,18 +101,15 @@ export default function Contact() {
           value={form.name}
           onChange={handleChange}
           placeholder="Your Name"
-          className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#202020]"
+          className="w-full p-3 border rounded-xl"
           required
         />
 
+        {/* 🔒 EMAIL IS LOCKED */}
         <input
-          name="email"
-          value={form.email}
-          onChange={handleChange}
-          placeholder="Your Email"
-          type="email"
-          className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#202020]"
-          required
+          value={userEmail}
+          disabled
+          className="w-full p-3 bg-gray-100 border rounded-xl cursor-not-allowed"
         />
 
         <textarea
@@ -78,24 +118,46 @@ export default function Contact() {
           onChange={handleChange}
           placeholder="Your Message"
           rows={5}
-          className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#202020]"
+          className="w-full p-3 border rounded-xl"
           required
-        ></textarea>
+        />
 
         <button
-          type="submit"
           disabled={loading}
-          className="bg-black text-white text-lg px-4 py-3 w-full rounded-lg shadow hover:bg-[#ff8f9c] transition"
+          className="bg-black text-white w-full py-3 rounded-lg"
         >
           {loading ? "Sending..." : "Send Message"}
         </button>
       </form>
 
-      <div className="mt-10 text-center text-gray-600">
-        <p>Email: support@trendzone.com</p>
-        <p>Phone: +8801940686844</p>
-        <p>Address: Sherpur Sadar, Dhaka, Bangladesh</p>
-      </div>
+      {/* ------------------ HISTORY ------------------ */}
+      {messages.length > 0 && (
+        <div className="mt-14">
+          <h2 className="text-2xl font-bold text-center mb-6">
+            Your Message History
+          </h2>
+
+          <div className="space-y-4">
+            {messages.map((msg) => (
+              <div key={msg.id} className="border rounded-xl p-4">
+                <p className="font-semibold">Your Message</p>
+                <p className="text-gray-700">{msg.message}</p>
+
+                {msg.replied ? (
+                  <div className="mt-3 bg-gray-50 border rounded-lg p-3">
+                    <p className="font-semibold">Admin Reply</p>
+                    <p>{msg.reply}</p>
+                  </div>
+                ) : (
+                  <p className="text-sm text-orange-600 mt-2">
+                    Waiting for admin reply
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

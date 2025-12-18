@@ -9,6 +9,7 @@ import { FaRegStarHalfStroke } from "react-icons/fa6";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
+import { HiOutlineCollection } from "react-icons/hi";
 
 export default function RelatedProducts({ category, currentId }) {
   const [products, setProducts] = useState([]);
@@ -17,12 +18,15 @@ export default function RelatedProducts({ category, currentId }) {
   useEffect(() => {
     const fetchRelated = async () => {
       const snapshot = await getDocs(collection(db, "Products"));
-      let data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
 
-      // ✅ Filter by category & exclude current product
+      let data = snapshot.docs
+        .map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+        // ❌ remove 0 stock products
+        .filter((p) => Number(p.stock) > 0);
+
       const related = data
         .filter((p) => p.category === category && p.id !== currentId)
         .slice(0, 6);
@@ -37,7 +41,8 @@ export default function RelatedProducts({ category, currentId }) {
 
   return (
     <div className="w-11/12 mx-auto shadow bg-white p-3 mt-10 rounded-2xl">
-      <h2 className="text-2xl font-pop font-bold ml-2 mb-3 text-black">
+      <h2 className="text-2xl font-pop font-bold ml-2 mb-3 text-black flex items-center gap-2">
+        <HiOutlineCollection className="text-green-600" />
         Related Products
       </h2>
 
