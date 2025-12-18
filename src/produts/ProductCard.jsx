@@ -12,13 +12,20 @@ const ProductCard = ({ product }) => {
     addToCart(product);
   };
 
+  const openProduct = () => {
+    navigate(`/product/${product.id}`);
+  };
+
   const handleBuyNow = () => {
     buyNow(product); // Changed
     navigate("/checkout");
   };
 
   return (
-    <div className="relative font-mon border border-gray-200 rounded-xl bg-white p-3 sm:p-3 shadow-sm hover:shadow-lg transition-transform duration-300 transform hover:scale-105 max-w-[200px] sm:max-w-xs mx-auto">
+    <div
+      className="relative font-mon border border-gray-200 rounded-xl bg-white p-3 sm:p-3 shadow-sm hover:shadow-lg transition-transform duration-300 transform hover:scale-105 max-w-[200px] sm:max-w-xs mx-auto"
+      onClick={openProduct}
+    >
       {/* Discount Circle */}
       <div className="absolute top-2 left-2 bg-red-600 text-white text-[10px] sm:text-xs font-bold w-7 h-7 sm:w-9 sm:h-9 flex items-center justify-center rounded-full shadow-md">
         {Math.round(
@@ -49,22 +56,6 @@ const ProductCard = ({ product }) => {
             ৳{product.oldprice}
           </p>
           <strong className="text-gray-900 text-sm">৳{product.newprice}</strong>
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-1 mt-2">
-          <button
-            onClick={handleAddToCart}
-            className="w-full sm:w-1/2 bg-[#000000] text-[#ffffff] rounded-lg py-1 text-xs"
-          >
-            Add to Cart
-          </button>
-
-          <button
-            onClick={handleBuyNow}
-            className="w-full sm:w-1/2 bg-[#000000] text-[#ffffff] rounded-lg py-1 text-xs"
-          >
-            Buy Now
-          </button>
         </div>
       </div>
     </div>

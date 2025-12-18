@@ -43,6 +43,8 @@ export default function Checkout() {
     email: "",
     address: "",
     trxId: "",
+    size: "",
+    note: "",
   });
 
   const handleChange = (e) => {
@@ -67,7 +69,9 @@ export default function Checkout() {
 
   const handleOrder = async () => {
     if (!form.name || !form.email || !form.address || !form.trxId)
-      return toast.error("Please fill all fields");
+      return toast.error("Please fill all required fields");
+
+    if (!form.size) return toast.error("Please select a size");
 
     if (!selectedPayment) return toast.error("Please select a payment method");
 
@@ -88,6 +92,10 @@ export default function Checkout() {
         email: form.email,
         address: form.address,
         trxId: form.trxId,
+
+        size: form.size, // ✅ NEW
+        note: form.note, // ✅ NEW
+
         payment_type: selectedPayment.payment_type,
         payment_no: selectedPayment.payment_no,
         status: "pending",
@@ -190,6 +198,32 @@ export default function Checkout() {
           placeholder="Full Address"
           className="w-full mb-4 p-3 border rounded-xl"
         ></textarea>
+
+        {/* Size Selection */}
+        <div className="w-full mb-4">
+          <label className="block mb-1 font-semibold">Select Size</label>
+          <select
+            name="size"
+            value={form.size}
+            onChange={handleChange}
+            className="w-full p-3 border rounded-xl"
+          >
+            <option value="">Choose size</option>
+            <option value="S">Small (S)</option>
+            <option value="M">Medium (M)</option>
+            <option value="L">Large (L)</option>
+            <option value="XL">Extra Large (XL)</option>
+            <option value="Custom">Custom</option>
+          </select>
+        </div>
+
+        {/* Order Note */}
+        <textarea
+          name="note"
+          onChange={handleChange}
+          placeholder="Order note (color, size details, delivery instructions etc.)"
+          className="w-full mb-4 p-3 border rounded-xl"
+        />
 
         <div className="w-full mb-4 p-3 border border-gray-300 rounded-xl">
           <h3 className="text-lg font-bold mb-2">Select Payment Method</h3>

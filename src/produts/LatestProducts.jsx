@@ -2,22 +2,21 @@
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
-import toast from "react-hot-toast";
 import "swiper/css";
 import "swiper/css/pagination";
+import toast from "react-hot-toast";
+
 import { FaStar } from "react-icons/fa";
 import { FaRegStarHalfStroke } from "react-icons/fa6";
+import { FiTrendingUp } from "react-icons/fi";
+
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
-import { useCart } from "../context/CartContext"; // <= use buyNow
-import { FiTrendingUp } from "react-icons/fi";
 
 export default function LatestProducts() {
   const [products, setProducts] = useState([]);
-  const [paymentMethod, setPaymentMethod] = useState(null);
   const navigate = useNavigate();
-  const { buyNow } = useCart(); // <-- use buyNow to set single-item flow
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -30,50 +29,20 @@ export default function LatestProducts() {
         setProducts(data);
       } catch (error) {
         console.log(error);
-        toast.error("Failed to load product data. Please try again.");
-      }
-    };
-
-    const fetchPayments = async () => {
-      try {
-        const snap = await getDocs(collection(db, "PaymentMethods"));
-        const pm = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        if (pm.length > 0) setPaymentMethod(pm[0]);
-      } catch (err) {
-        console.log(err);
-        toast.error("Failed to load payment method!");
+        toast.error("Failed to load product data");
       }
     };
 
     fetchProducts();
-    fetchPayments();
   }, []);
 
-  const openCheckout = (product) => {
-    if (!paymentMethod) {
-      toast.error("Payment method not found!");
-      return;
-    }
-
-    // 1) set buy-now item in context (so Checkout reads it)
-    buyNow({
-      id: product.id,
-      title: product.title,
-      newprice: product.newprice,
-      product_picture: product.product_picture,
-      quantity: 1,
-    });
-
-    // 2) navigate to checkout (must be the route that renders Checkout)
-    navigate("/checkout", {
-      state: {
-        payment: paymentMethod, // optional, Checkout already fetches payment methods; you can supply it
-      },
-    });
+  // 👉 Open product details page
+  const openProduct = (product) => {
+    navigate(`/product/${product.id}`);
   };
 
   return (
-    <div className="w-11/12 mx-auto shadow bg-[#ffffff] p-3 mt-5 rounded-2xl">
+    <div className="w-11/12 mx-auto shadow bg-white p-3 mt-5 rounded-2xl">
       <h2 className="text-2xl font-pop font-bold ml-2 mb-3 text-black flex items-center gap-2">
         <FiTrendingUp className="text-blue-500" /> Latest Products
       </h2>
@@ -86,16 +55,17 @@ export default function LatestProducts() {
         breakpoints={{
           480: { slidesPerView: 2 },
           640: { slidesPerView: 3 },
-          1024: { slidesPerView: 6 }, // full size for lg
+          1024: { slidesPerView: 6 },
         }}
       >
         {products.map((product) => (
           <SwiperSlide key={product.id}>
             <button
               type="button"
+              onClick={() => openProduct(product)}
               className="relative block border border-gray-200 rounded-xl bg-white shadow-sm 
-    transition-transform duration-300 hover:scale-105 mt-2 mb-2 p-2 w-[140px] mx-auto sm:p-3 sm:w-[180px] lg:w-[200px] lg:p-3"
-              onClick={() => openCheckout(product)}
+              transition-transform duration-300 hover:scale-105 mt-2 mb-2 p-2 
+              w-[140px] mx-auto sm:p-3 sm:w-[180px] lg:w-[200px]"
             >
               {/* Latest Badge */}
               <div className="absolute top-2 left-2 bg-blue-600 text-white text-[10px] sm:text-xs font-bold px-2 py-1 rounded-full shadow">
@@ -109,12 +79,12 @@ export default function LatestProducts() {
               />
 
               <div className="mt-2 px-1">
-                <h3 className="font-mon text-[#21214c] truncate text-xs font-semibold sm:text-sm sm:font-bold text-left">
+                <h3 className="font-mon text-[#21214c] truncate text-xs sm:text-sm font-bold text-left">
                   {product.title}
                 </h3>
 
                 <div className="flex text-yellow-400 text-xs sm:text-sm">
-                  <FaStar /> <FaStar /> <FaStar /> <FaStar />{" "}
+                  <FaStar /> <FaStar /> <FaStar /> <FaStar />
                   <FaRegStarHalfStroke />
                 </div>
 

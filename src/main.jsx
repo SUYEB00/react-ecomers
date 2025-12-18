@@ -20,6 +20,7 @@ import PrivacyPolicy from "./components/PrivacyPolicy";
 // ⬅⬅⬅ ADD THIS IMPORT
 import { CartProvider } from "./context/CartContext";
 import Cart from "./Pages/Cart";
+import ProductDetails from "./Pages/ProductDetailsPage";
 
 const router = createBrowserRouter([
   {
@@ -81,6 +82,12 @@ const router = createBrowserRouter([
   {
     path: "/cart",
     element: <Cart></Cart>,
+  },
+  ,
+  {
+    path: "/product/:id",
+    element: 
+    <ProductDetails></ProductDetails>,
   },
 ]);
 

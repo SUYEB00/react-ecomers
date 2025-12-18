@@ -4,18 +4,17 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
-import { FaClock } from "react-icons/fa";
-import { FaStar } from "react-icons/fa";
+
+import { FaClock, FaStar } from "react-icons/fa";
 import { FaRegStarHalfStroke } from "react-icons/fa6";
+
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
-import { useCart } from "../context/CartContext";
 
 export default function NewArrivals() {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
-  const { buyNow } = useCart();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -26,9 +25,9 @@ export default function NewArrivals() {
         ...doc.data(),
       }));
 
-      // Sort by createdAt → newest first
+      // Sort by createdAt (newest first)
       const sorted = data
-        .filter((p) => p.createdAt) // only items with timestamp
+        .filter((p) => p.createdAt)
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .slice(0, 6);
 
@@ -38,16 +37,9 @@ export default function NewArrivals() {
     fetchProducts();
   }, []);
 
-  const openCheckout = (product) => {
-    buyNow({
-      id: product.id,
-      title: product.title,
-      newprice: product.newprice,
-      product_picture: product.product_picture,
-      quantity: 1,
-    });
-
-    navigate("/checkout");
+  // 👉 Open product details page
+  const openProduct = (product) => {
+    navigate(`/product/${product.id}`);
   };
 
   return (
@@ -70,8 +62,10 @@ export default function NewArrivals() {
         {products.map((product) => (
           <SwiperSlide key={product.id}>
             <button
-              onClick={() => openCheckout(product)}
-              className="relative block border border-gray-200 rounded-xl bg-white shadow-sm hover:scale-105 transition-transform mt-2 mb-2 p-2 w-[140px] mx-auto sm:p-3 sm:w-[180px] lg:w-[200px]"
+              onClick={() => openProduct(product)}
+              className="relative block border border-gray-200 rounded-xl bg-white shadow-sm 
+              hover:scale-105 transition-transform mt-2 mb-2 p-2 
+              w-[140px] mx-auto sm:p-3 sm:w-[180px] lg:w-[200px]"
             >
               {/* NEW Badge */}
               <div className="absolute top-2 left-2 bg-blue-600 text-white text-[10px] sm:text-xs font-bold px-2 py-1 rounded-full shadow">
@@ -80,17 +74,17 @@ export default function NewArrivals() {
 
               <img
                 src={product.product_picture}
-                className="h-[100px] w-[100px] sm:h-[160px] sm:w-[160px] object-cover rounded mx-auto"
                 alt={product.title}
+                className="h-[100px] w-[100px] sm:h-[160px] sm:w-[160px] object-cover rounded mx-auto"
               />
 
               <div className="mt-2 px-1">
-                <h3 className="font-mon text-[#21214c] truncate text-xs sm:text-sm sm:font-bold text-left">
+                <h3 className="font-mon text-[#21214c] truncate text-xs sm:text-sm font-bold text-left">
                   {product.title}
                 </h3>
 
                 <div className="flex text-yellow-400 text-xs sm:text-sm">
-                  <FaStar /> <FaStar /> <FaStar /> <FaStar />{" "}
+                  <FaStar /> <FaStar /> <FaStar /> <FaStar />
                   <FaRegStarHalfStroke />
                 </div>
 
