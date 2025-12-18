@@ -22,7 +22,6 @@ export default function Contact() {
     message: "",
   });
 
-  /* ------------------ AUTH + HISTORY ------------------ */
   useEffect(() => {
     let unsubscribeMessages = null;
 
@@ -53,7 +52,6 @@ export default function Contact() {
     };
   }, []);
 
-  /* ------------------ FORM ------------------ */
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
