@@ -12,7 +12,7 @@ import {
   HiOutlineCash,
   HiOutlineCheckCircle,
   HiOutlineClock,
-  HiOutlineMail,
+  HiOutlinePhone,
   HiOutlineShoppingBag,
   HiOutlineTrash,
   HiOutlineUser,
@@ -73,7 +73,9 @@ export default function AdminOrders() {
 
       <div className="mb-5 text-lg font-semibold text-gray-700">
         Total Orders:{" "}
-        <span className="ml-2 px-3 py-1 bg-red-100 text-red-600 rounded-full text-sm">{orders.length}</span>
+        <span className="ml-2 px-3 py-1 bg-red-100 text-red-600 rounded-full text-sm">
+          {orders.length}
+        </span>
       </div>
 
       <div className="overflow-x-auto rounded-xl border border-gray-300 bg-white shadow-sm">
@@ -128,9 +130,14 @@ export default function AdminOrders() {
 
                 {/* CONTACT */}
                 <td className="p-3">
-                  <div className="flex items-center gap-2">
-                    <HiOutlineMail />
-                    {order.email}
+                  <div className="flex items-center gap-2 font-semibold">
+                    <HiOutlinePhone />
+                    <a
+                      href={`tel:${order.phone}`}
+                      className="text-blue-600 hover:underline"
+                    >
+                      {order.phone}
+                    </a>
                   </div>
                 </td>
 

@@ -17,7 +17,6 @@ import UserManagement from "./Management/UserManagement";
 import TermsOfUse from "./components/TermsOfUse";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 
-// ⬅⬅⬅ ADD THIS IMPORT
 import { CartProvider } from "./context/CartContext";
 import Cart from "./Pages/Cart";
 import ProductDetails from "./Pages/ProductDetailsPage";

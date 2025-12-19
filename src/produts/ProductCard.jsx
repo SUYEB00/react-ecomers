@@ -7,14 +7,12 @@ const ProductCard = ({ product }) => {
   const navigate = useNavigate();
 
   const stockCount = Number(product.stock);
-const isOutOfStock = stockCount <= 0;
-
+  const isOutOfStock = stockCount <= 0;
 
   const openProduct = () => {
-  if (stockCount <= 0) return; // ❌ block navigation
-  navigate(`/product/${product.id}`);
-};
-
+    if (stockCount <= 0) return;
+    navigate(`/product/${product.id}`);
+  };
 
   return (
     <div
@@ -37,7 +35,7 @@ const isOutOfStock = stockCount <= 0;
       </div>
 
       {/* STOCK BADGE */}
-      <div className="absolute top-2 right-2">
+      <div className="absolute top-1 right-1">
         <span
           className={`text-[10px] px-2 py-[2px] rounded-full text-white
             ${
@@ -60,10 +58,9 @@ const isOutOfStock = stockCount <= 0;
 
       <div className="mt-2">
         <h3 className="text-gray-900 font-semibold text-xs sm:text-sm">
-  {product.title?.split(" ").slice(0, 2).join(" ")}
-  {product.title?.split(" ").length > 2 && "..."}
-</h3>
-
+          {product.title?.split(" ").slice(0, 2).join(" ")}
+          {product.title?.split(" ").length > 2 && "..."}
+        </h3>
 
         <div className="flex text-yellow-400 mt-1 text-xs">
           <FaStar /> <FaStar /> <FaStar /> <FaStar /> <FaRegStarHalfStroke />
@@ -73,9 +70,7 @@ const isOutOfStock = stockCount <= 0;
           <p className="line-through text-gray-400 text-xs">
             ৳{product.oldprice}
           </p>
-          <strong className="text-gray-900 text-sm">
-            ৳{product.newprice}
-          </strong>
+          <strong className="text-gray-900 text-sm">৳{product.newprice}</strong>
         </div>
       </div>
     </div>

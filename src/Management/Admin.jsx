@@ -52,12 +52,8 @@ const AdminDashboard = () => {
 
   return (
     <div className="w-11/12 mx-auto mt-10 font-pop">
-      <h1 className="text-3xl font-bold mb-2 text-black">
-        🛠 Admin Dashboard
-      </h1>
-      <p className="text-gray-500 mb-8">
-        Manage your store content and orders
-      </p>
+      <h1 className="text-3xl font-bold mb-2 text-black">🛠 Admin Dashboard</h1>
+      <p className="text-gray-500 mb-8">Manage your store content and orders</p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {cards.map((item, index) => (

@@ -67,9 +67,8 @@ export default function Navbar() {
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  // ✅ Only one handleSearch function
   const handleSearch = (e) => {
-    e.preventDefault(); // prevent page reload
+    e.preventDefault();
     if (!searchTerm) return;
     navigate(`/products?search=${searchTerm}`);
   };
@@ -95,17 +94,16 @@ export default function Navbar() {
     return unsubscribe;
   }, []);
 
-  // Keep user logged in
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      setUser(user); // null if not logged in
+      setUser(user);
       setIsAdmin(user?.email === adminEmail);
     });
     return unsubscribe;
   }, []);
 
   const handleIconClick = () => {
-    setShowPopup((prev) => !prev); // just toggle dropdown
+    setShowPopup((prev) => !prev);
   };
 
   const logout = async () => {

@@ -30,7 +30,6 @@ export default function Contact() {
     message: "",
   });
 
-  /* ---------------- GUEST ID ---------------- */
   useEffect(() => {
     let guestId = localStorage.getItem("guestId");
     if (!guestId) {
@@ -40,7 +39,6 @@ export default function Contact() {
     setUserKey(guestId);
   }, []);
 
-  /* ---------------- AUTH ---------------- */
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -51,13 +49,12 @@ export default function Contact() {
     return () => unsub();
   }, []);
 
-  /* ---------------- REALTIME HISTORY (🔥 FIX) ---------------- */
   useEffect(() => {
     if (!userKey) return;
 
     const q = query(
       collection(db, "ContactMessages"),
-      orderBy("createdAtClient", "desc") // ✅ NO where()
+      orderBy("createdAtClient", "desc")
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -66,7 +63,6 @@ export default function Contact() {
         ...doc.data(),
       }));
 
-      // 🔥 FILTER CLIENT SIDE (SAFE)
       const userMessages = data.filter((msg) => msg.userKey === userKey);
 
       setAllMessages(userMessages);
@@ -75,7 +71,6 @@ export default function Contact() {
     return () => unsubscribe();
   }, [userKey]);
 
-  /* ---------------- SUBMIT ---------------- */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -96,7 +91,7 @@ export default function Contact() {
         replied: false,
 
         userKey,
-        createdAtClient: Date.now(), // 🔥 MUST exist
+        createdAtClient: Date.now(),
         createdAt: serverTimestamp(),
       });
 

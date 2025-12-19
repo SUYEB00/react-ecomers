@@ -1,4 +1,3 @@
-// NewArrivals.jsx
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
@@ -25,10 +24,9 @@ export default function NewArrivals() {
           id: doc.id,
           ...doc.data(),
         }))
-        // ❌ remove 0 stock products
+
         .filter((p) => Number(p.stock) > 0);
 
-      // Sort by createdAt (newest first)
       const sorted = data
         .filter((p) => p.createdAt)
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
@@ -40,7 +38,6 @@ export default function NewArrivals() {
     fetchProducts();
   }, []);
 
-  // 👉 Open product details page
   const openProduct = (product) => {
     navigate(`/product/${product.id}`);
   };

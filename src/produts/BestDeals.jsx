@@ -1,4 +1,3 @@
-// BestDeals.jsx
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
@@ -25,10 +24,9 @@ export default function BestDeals() {
           id: doc.id,
           ...doc.data(),
         }))
-        // ✅ hide 0 stock products
+
         .filter((p) => Number(p.stock) > 0);
 
-      // calculate discount %
       data = data.map((p) => ({
         ...p,
         discountPercent: Math.round(
@@ -36,7 +34,6 @@ export default function BestDeals() {
         ),
       }));
 
-      // sort by highest discount & take top 6
       const top6 = data
         .sort((a, b) => b.discountPercent - a.discountPercent)
         .slice(0, 6);
@@ -47,7 +44,6 @@ export default function BestDeals() {
     fetchProducts();
   }, []);
 
-  // 👉 Open product details page
   const openProduct = (product) => {
     navigate(`/product/${product.id}`);
   };

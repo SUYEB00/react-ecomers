@@ -16,7 +16,7 @@ import { IoCashOutline } from "react-icons/io5";
 import {
   HiOutlineCreditCard,
   HiOutlineLocationMarker,
-  HiOutlineMail,
+  HiOutlinePhone,
   HiOutlineShoppingCart,
   HiOutlineUser,
 } from "react-icons/hi";
@@ -42,7 +42,7 @@ export default function Checkout() {
 
   const [form, setForm] = useState({
     name: "",
-    email: "",
+    phone: "",
     address: "",
     trxId: "",
     size: "",
@@ -86,6 +86,10 @@ export default function Checkout() {
       return toast.error("Please fill all required fields");
     }
 
+    if (!/^01[3-9]\d{8}$/.test(form.phone)) {
+      return toast.error("Enter a valid phone number");
+    }
+
     if (productWithSizes && !form.size) {
       return toast.error("Please select a size");
     }
@@ -121,8 +125,9 @@ export default function Checkout() {
         payment_no: selectedPayment.payment_no,
 
         name: form.name,
-        email: form.email,
+        phone: form.phone,
         address: form.address,
+
         note: form.note,
 
         status: "pending",
@@ -137,7 +142,6 @@ export default function Checkout() {
         timer: 1500,
       });
 
-      // Clear correct data
       if (buyNowItem) clearBuyNow();
       else clearCart();
 
@@ -238,12 +242,14 @@ export default function Checkout() {
         </div>
 
         <div className="flex items-center gap-2 bg-gray-50 border border-gray-300 rounded-xl p-3">
-          <HiOutlineMail className="text-xl text-gray-500" />
+          <HiOutlinePhone className="text-xl text-gray-500" />
           <input
-            name="email"
+            type="tel"
+            name="phone"
             onChange={handleChange}
-            placeholder="Your Email"
+            placeholder="Your Phone Number"
             className="w-full bg-transparent outline-none"
+            required
           />
         </div>
 

@@ -1,9 +1,4 @@
 import React from "react";
-
-// PaymentDelivery.jsx
-// A responsive Tailwind React component showing payment methods and delivery partners.
-// Replace the `src` values with your real logo URLs (local /assets or CDN).
-
 export default function PaymentDelivery({ className = "" }) {
   const payments = [
     { name: "bKash", src: "https://i.ibb.co.com/XZnyd5PX/Bkash.png" },

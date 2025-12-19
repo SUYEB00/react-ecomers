@@ -29,7 +29,7 @@ export default function AdminMessages() {
   useEffect(() => {
     const q = query(
       collection(db, "ContactMessages"),
-      orderBy("createdAtClient", "desc") // ✅ SAME AS CONTACT PAGE
+      orderBy("createdAtClient", "desc")
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {

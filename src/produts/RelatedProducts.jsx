@@ -1,4 +1,3 @@
-// RelatedProducts.jsx
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
@@ -24,7 +23,7 @@ export default function RelatedProducts({ category, currentId }) {
           id: doc.id,
           ...doc.data(),
         }))
-        // ❌ remove 0 stock products
+
         .filter((p) => Number(p.stock) > 0);
 
       const related = data

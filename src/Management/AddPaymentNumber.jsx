@@ -18,7 +18,6 @@ import {
 } from "react-icons/hi";
 
 const AddPaymentNumber = () => {
-  // PAYMENT METHOD STATE
   const [payment, setPayment] = useState({
     payment_type: "",
     payment_no: "",
@@ -26,7 +25,6 @@ const AddPaymentNumber = () => {
 
   const [paymentList, setPaymentList] = useState([]);
 
-  // DELIVERY CHARGE STATE
   const [deliveryCharge, setDeliveryCharge] = useState("");
 
   const handlePaymentChange = (e) => {
@@ -37,7 +35,6 @@ const AddPaymentNumber = () => {
     setDeliveryCharge(e.target.value);
   };
 
-  // ADD PAYMENT METHOD
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
 
@@ -52,7 +49,6 @@ const AddPaymentNumber = () => {
     }
   };
 
-  // SAVE DELIVERY CHARGE
   const saveDeliveryCharge = async () => {
     try {
       await setDoc(doc(db, "Settings", "DeliveryCharge"), {
@@ -65,7 +61,6 @@ const AddPaymentNumber = () => {
     }
   };
 
-  // FETCH PAYMENT METHODS
   const fetchPaymentMethods = async () => {
     const querySnapshot = await getDocs(collection(db, "PaymentMethods"));
     const items = querySnapshot.docs.map((doc) => ({
@@ -74,7 +69,6 @@ const AddPaymentNumber = () => {
     }));
     setPaymentList(items);
 
-    // fetch delivery charge
     const deliveryDoc = await getDoc(doc(db, "Settings", "DeliveryCharge"));
     if (deliveryDoc.exists()) {
       setDeliveryCharge(deliveryDoc.data().charge);
@@ -85,7 +79,6 @@ const AddPaymentNumber = () => {
     fetchPaymentMethods();
   }, []);
 
-  // DELETE PAYMENT METHOD
   const deletePayment = async (id) => {
     await deleteDoc(doc(db, "PaymentMethods", id));
     toast.success("Payment method deleted!");

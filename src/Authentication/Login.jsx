@@ -16,10 +16,8 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  // 🔥 Google Provider
   const googleProvider = new GoogleAuthProvider();
 
-  // 🔥 Email & Password Login
   const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
@@ -38,13 +36,11 @@ export default function Login() {
     }
   };
 
-  // 🔥 Google Login
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
-      // Save user to Firestore (merge prevents overwriting)
       await setDoc(
         doc(db, "Users", user.uid),
         {
@@ -64,7 +60,6 @@ export default function Login() {
     }
   };
 
-  // 🔥 Forgot Password
   const handleForgotPassword = async () => {
     if (!email) {
       toast.error("Enter your email first.");

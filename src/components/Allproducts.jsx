@@ -18,7 +18,6 @@ const Allproducts = () => {
   const queryParams = new URLSearchParams(location.search);
   const searchQuery = queryParams.get("search") || "";
 
-  // Fetch products from Firestore
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -39,16 +38,13 @@ const Allproducts = () => {
     fetchProducts();
   }, []);
 
-  // Filter products by category and search query
   useEffect(() => {
     let filtered = products;
 
-    // Filter by category
     if (selectCategory !== "All") {
       filtered = filtered.filter((p) => p.category === selectCategory);
     }
 
-    // Filter by search query
     if (searchQuery) {
       filtered = filtered.filter((p) =>
         p.title.toLowerCase().includes(searchQuery.toLowerCase())

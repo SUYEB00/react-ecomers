@@ -8,7 +8,6 @@ import { MdAdminPanelSettings } from "react-icons/md";
 export default function UserManagement() {
   const [users, setUsers] = useState([]);
 
-  // FETCH ALL USERS
   const fetchUsers = async () => {
     try {
       const snapshot = await getDocs(collection(db, "Users"));
@@ -22,11 +21,10 @@ export default function UserManagement() {
     }
   };
 
-  // DELETE USER
   const deleteUser = async (id) => {
     try {
       await deleteDoc(doc(db, "Users", id));
-      fetchUsers(); // refresh list
+      fetchUsers();
     } catch (error) {
       console.log("Error deleting user:", error);
     }

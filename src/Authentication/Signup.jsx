@@ -8,8 +8,8 @@ import {
 } from "firebase/auth";
 import {} from "firebase/auth";
 
-import { doc, setDoc } from "firebase/firestore"; // ✅ ADD THIS
-import { db } from "../firebase"; // ✅ ADD THIS
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -28,7 +28,6 @@ export default function Signup() {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
-      // Save user to Firestore if new
       await setDoc(
         doc(db, "Users", user.uid),
         {
@@ -38,7 +37,7 @@ export default function Signup() {
           role: "user",
           createdAt: new Date().toISOString(),
         },
-        { merge: true } // ⬅ If user exists, don't overwrite
+        { merge: true }
       );
 
       toast.success("Logged in with Google!");
@@ -55,7 +54,6 @@ export default function Signup() {
     }
 
     try {
-      // 🔥 Create auth user
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -64,15 +62,13 @@ export default function Signup() {
 
       const user = userCredential.user;
 
-      // 🔥 Update display name
       await updateProfile(user, { displayName: name });
 
-      // 🔥 Save user to Firestore → Users collection
       await setDoc(doc(db, "Users", user.uid), {
         uid: user.uid,
         name: name,
         email: email,
-        role: "user", // <— default role
+        role: "user",
         createdAt: new Date().toISOString(),
       });
 

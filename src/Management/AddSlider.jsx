@@ -13,7 +13,6 @@ import { HiOutlinePhotograph, HiOutlineTrash } from "react-icons/hi";
 import { FiPlus } from "react-icons/fi";
 
 const AddSlider = () => {
-  // SLIDER STATE
   const [slider, setSlider] = useState({
     slider_img: "",
   });
@@ -24,7 +23,6 @@ const AddSlider = () => {
     setSlider({ ...slider, [e.target.name]: e.target.value });
   };
 
-  // ADD SLIDER
   const handleSliderSubmit = async (e) => {
     e.preventDefault();
 
@@ -40,7 +38,6 @@ const AddSlider = () => {
     }
   };
 
-  // FETCH SLIDER
   const fetchSlider = async () => {
     const querySnapshot = await getDocs(collection(db, "Sliders"));
     const items = querySnapshot.docs.map((doc) => ({
@@ -54,7 +51,6 @@ const AddSlider = () => {
     fetchSlider();
   }, []);
 
-  // DELETE SLIDER
   const deleteSlider = async (id) => {
     await deleteDoc(doc(db, "Sliders", id));
     toast.success("Slider deleted!");

@@ -29,7 +29,7 @@ export const CartProvider = ({ children }) => {
         ...prev,
         {
           ...product,
-          sizes: product.sizes || [], // ✅ FIX
+          sizes: product.sizes || [],
           quantity: 1,
         },
       ];
@@ -39,7 +39,7 @@ export const CartProvider = ({ children }) => {
   const buyNow = (product) => {
     setBuyNowItem({
       ...product,
-      sizes: product.sizes || [], // ✅ FIX
+      sizes: product.sizes || [],
       quantity: 1,
     });
   };

@@ -19,7 +19,6 @@ import {
 } from "react-icons/hi";
 
 const AddProducts = () => {
-  // PRODUCT STATE
   const [product, setProduct] = useState({
     title: "",
     product_description: "",
@@ -35,7 +34,6 @@ const AddProducts = () => {
   const [productsList, setProductsList] = useState([]);
   const [editId, setEditId] = useState(null);
 
-  // INPUT HANDLER
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -51,7 +49,6 @@ const AddProducts = () => {
     }
   };
 
-  // ADD / UPDATE PRODUCT
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -87,7 +84,6 @@ const AddProducts = () => {
     }
   };
 
-  // FETCH PRODUCTS
   const fetchProducts = async () => {
     const snapshot = await getDocs(collection(db, "Products"));
     const items = snapshot.docs.map((doc) => ({
@@ -101,7 +97,6 @@ const AddProducts = () => {
     fetchProducts();
   }, []);
 
-  // DELETE PRODUCT
   const deleteProduct = async (id) => {
     if (!window.confirm("Delete this product?")) return;
 
@@ -110,7 +105,6 @@ const AddProducts = () => {
     setProductsList(productsList.filter((item) => item.id !== id));
   };
 
-  // EDIT PRODUCT
   const editProduct = (item) => {
     setEditId(item.id);
     setProduct({

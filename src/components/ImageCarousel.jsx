@@ -11,7 +11,6 @@ import "../index.css";
 export default function Carousel() {
   const [slides, setSlides] = useState([]);
 
-  // FETCH SLIDER IMAGES FROM FIRESTORE
   const fetchSliders = async () => {
     const querySnapshot = await getDocs(collection(db, "Sliders"));
     const sliderImages = querySnapshot.docs.map((doc) => doc.data().slider_img);

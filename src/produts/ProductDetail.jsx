@@ -42,7 +42,6 @@ const ProductDetails = () => {
     return <div className="text-center mt-20">Product not found</div>;
   }
 
-  // ✅ Buy Now handler
   const handleBuyNow = () => {
     buyNow({
       id: product.id,
@@ -56,7 +55,6 @@ const ProductDetails = () => {
     navigate("/checkout");
   };
 
-  // ✅ Add to cart handler
   const handleAddToCart = () => {
     addToCart({
       id: product.id,
