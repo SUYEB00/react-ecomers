@@ -9,6 +9,14 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import toast, { Toaster } from "react-hot-toast";
+import {
+  HiOutlineCheckCircle,
+  HiOutlineCube,
+  HiOutlinePencil,
+  HiOutlineTag,
+  HiOutlineTrash,
+  HiOutlineXCircle,
+} from "react-icons/hi";
 
 const AddProducts = () => {
   // PRODUCT STATE
@@ -120,140 +128,188 @@ const AddProducts = () => {
   };
 
   return (
-    <div className="w-11/12 mx-auto mt-10 font-mon">
+    <div className="w-11/12 mx-auto mt-10 mb-10 font-mon">
       <Toaster position="top-right" />
 
-      <h2 className="text-2xl font-bold mb-6">
-        {editId ? "Edit Product" : "Add Product"}
-      </h2>
+      {/* HEADER */}
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="text-3xl font-bold flex items-center gap-2">
+          <HiOutlineCube className="text-gray-600" />
+          {editId ? "Edit Product" : "Add Product"}
+        </h2>
 
-      {/* FORM */}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          name="title"
-          value={product.title}
-          onChange={handleChange}
-          placeholder="Title"
-          className="w-full p-3  bg-gray-50 border border-gray-300 rounded-xl text-gray-800 focus:border-[#000000] focus:outline-none transition"
-          required
-        />
-
-        <input
-          name="product_description"
-          value={product.product_description}
-          onChange={handleChange}
-          placeholder="Description"
-          className="w-full p-3  bg-gray-50 border border-gray-300 rounded-xl text-gray-800 focus:border-[#000000] focus:outline-none transition"
-          required
-        />
-
-        <input
-          name="product_picture"
-          value={product.product_picture}
-          onChange={handleChange}
-          placeholder="Image URL"
-          className="w-full p-3  bg-gray-50 border border-gray-300 rounded-xl text-gray-800 focus:border-[#000000] focus:outline-none transition"
-          required
-        />
-
-        <input
-          name="oldprice"
-          value={product.oldprice}
-          onChange={handleChange}
-          placeholder="Old Price"
-          className="w-full p-3  bg-gray-50 border border-gray-300 rounded-xl text-gray-800 focus:border-[#000000] focus:outline-none transition"
-          required
-        />
-
-        <input
-          name="newprice"
-          value={product.newprice}
-          onChange={handleChange}
-          placeholder="New Price"
-          className="w-full p-3  bg-gray-50 border border-gray-300 rounded-xl text-gray-800 focus:border-[#000000] focus:outline-none transition"
-          required
-        />
-
-        <input
-          name="category"
-          value={product.category}
-          onChange={handleChange}
-          placeholder="Category"
-          className="w-full p-3  bg-gray-50 border border-gray-300 rounded-xl text-gray-800 focus:border-[#000000] focus:outline-none transition"
-          required
-        />
-
-        <input
-          name="sizes"
-          value={product.sizes.join(", ")}
-          onChange={handleChange}
-          placeholder="Sizes (S,M,L,XL)"
-          className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 focus:border-[#000000] focus:outline-none transition"
-        />
-
-        <input
-          type="number"
-          name="stock"
-          value={product.stock}
-          onChange={handleChange}
-          placeholder="Stock Quantity"
-          className="w-full p-3  bg-gray-50 border border-gray-300 rounded-xl text-gray-800 focus:border-[#000000] focus:outline-none transition"
-          required
-        />
-
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            name="inStock"
-            checked={product.inStock}
-            onChange={handleChange}
-          />
-          In Stock
-        </label>
-
-        <button
-          type="submit"
-          className="px-6 py-2 bg-black text-white rounded-xl"
-        >
-          {editId ? "Update Product" : "Add Product"}
-        </button>
-      </form>
-
-      {/* PRODUCT LIST */}
-      <h2 className="text-xl font-bold mt-12 mb-4">All Products</h2>
-
-      <div className="mb-5 text-lg font-semibold">
-        Total Products:{" "}
-        <span className="text-red-500">{productsList.length}</span>
+        <div className="text-lg font-semibold">
+          Total Products:
+          <span className="ml-2 px-3 py-1 bg-red-100 text-red-600 rounded-full text-sm">
+            {productsList.length}
+          </span>
+        </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-6 bg-[#ffffff] rounded-2xl">
+      {/* FORM CARD */}
+      <div className="bg-white border border-gray-200 rounded-2xl shadow p-6 mb-12">
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
+          <input
+            name="title"
+            value={product.title}
+            onChange={handleChange}
+            placeholder="Product Title"
+            className="p-3 bg-gray-50 border border-gray-300 rounded-xl focus:border-black focus:outline-none"
+            required
+          />
+
+          <input
+            name="category"
+            value={product.category}
+            onChange={handleChange}
+            placeholder="Category"
+            className="p-3 bg-gray-50 border border-gray-300 rounded-xl focus:border-black focus:outline-none"
+            required
+          />
+
+          <input
+            name="product_picture"
+            value={product.product_picture}
+            onChange={handleChange}
+            placeholder="Image URL"
+            className="p-3 bg-gray-50 border border-gray-300 rounded-xl focus:border-black focus:outline-none md:col-span-2"
+            required
+          />
+
+          <input
+            name="product_description"
+            value={product.product_description}
+            onChange={handleChange}
+            placeholder="Short Description"
+            className="p-3 bg-gray-50 border border-gray-300 rounded-xl focus:border-black focus:outline-none md:col-span-2"
+            required
+          />
+
+          <input
+            name="oldprice"
+            value={product.oldprice}
+            onChange={handleChange}
+            placeholder="Old Price"
+            className="p-3 bg-gray-50 border border-gray-300 rounded-xl focus:border-black focus:outline-none"
+            required
+          />
+
+          <input
+            name="newprice"
+            value={product.newprice}
+            onChange={handleChange}
+            placeholder="New Price"
+            className="p-3 bg-gray-50 border border-gray-300 rounded-xl focus:border-black focus:outline-none"
+            required
+          />
+
+          <input
+            name="sizes"
+            value={product.sizes.join(", ")}
+            onChange={handleChange}
+            placeholder="Sizes (S, M, L, XL)"
+            className="p-3 bg-gray-50 border border-gray-300 rounded-xl focus:border-black focus:outline-none"
+          />
+
+          <input
+            type="number"
+            name="stock"
+            value={product.stock}
+            onChange={handleChange}
+            placeholder="Stock Quantity"
+            className="p-3 bg-gray-50 border border-gray-300 rounded-xl focus:border-black focus:outline-none"
+            required
+          />
+
+          {/* STOCK STATUS */}
+          <div className="flex items-center gap-3 md:col-span-2">
+            <label className="flex items-center gap-2 text-gray-700">
+              <input
+                type="checkbox"
+                name="inStock"
+                checked={product.inStock}
+                onChange={handleChange}
+              />
+              In Stock
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            className="md:col-span-2 px-6 py-3 bg-black text-white rounded-xl hover:bg-gray-800 transition"
+          >
+            {editId ? "Update Product" : "Add Product"}
+          </button>
+        </form>
+      </div>
+
+      {/* PRODUCT GRID */}
+      <h2 className="text-2xl font-bold mb-4">All Products</h2>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
         {productsList.map((item) => (
-          <div key={item.id} className=" p-3">
+          <div
+            key={item.id}
+            className="bg-white border border-gray-200 rounded-2xl shadow hover:shadow-lg transition p-4"
+          >
             <img
               src={item.product_picture}
               alt={item.title}
-              className="h-[100px] w-[100px] mx-auto rounded object-cover sm:h-[160px] sm:w-[160px]"
+              className="h-40 w-full object-cover rounded-xl mb-3"
             />
 
-            <h3 className="font-bold mt-2">{item.title}</h3>
-            <p>৳ {item.newprice}</p>
-            <p className="line-through text-sm">৳ {item.oldprice}</p>
-            <p>Stock: {item.stock}</p>
-            <p>Status: {item.inStock ? "Available" : "Out of Stock"}</p>
-            <p>Sizes: {item.sizes?.join(", ")}</p>
+            <h3 className="font-bold text-gray-900 truncate">{item.title}</h3>
 
-            <div className="flex gap-2 mt-3">
+            <p className="text-sm text-gray-500 flex items-center gap-1">
+              <HiOutlineTag /> {item.category}
+            </p>
+
+            <div className="mt-2">
+              <p className="font-semibold text-black">৳ {item.newprice}</p>
+              <p className="text-sm line-through text-gray-400">
+                ৳ {item.oldprice}
+              </p>
+            </div>
+
+            <p className="text-sm mt-1">
+              Stock: <span className="font-semibold">{item.stock}</span>
+            </p>
+
+            <p className="text-sm flex items-center gap-1 mt-1">
+              {item.inStock ? (
+                <>
+                  <HiOutlineCheckCircle className="text-green-600" />
+                  Available
+                </>
+              ) : (
+                <>
+                  <HiOutlineXCircle className="text-red-600" />
+                  Out of Stock
+                </>
+              )}
+            </p>
+
+            <p className="text-sm text-gray-600 mt-1">
+              Sizes: {item.sizes?.join(", ")}
+            </p>
+
+            <div className="flex gap-2 mt-4">
               <button
                 onClick={() => editProduct(item)}
-                className="bg-blue-600 text-white px-3 py-1 rounded"
+                className="flex-1 flex items-center justify-center gap-1 bg-blue-600 text-white py-2 rounded-xl text-sm hover:bg-blue-700 transition"
               >
+                <HiOutlinePencil />
                 Edit
               </button>
+
               <button
                 onClick={() => deleteProduct(item.id)}
-                className="bg-red-600 text-white px-3 py-1 rounded"
+                className="flex-1 flex items-center justify-center gap-1 bg-red-600 text-white py-2 rounded-xl text-sm hover:bg-red-700 transition"
               >
+                <HiOutlineTrash />
                 Delete
               </button>
             </div>

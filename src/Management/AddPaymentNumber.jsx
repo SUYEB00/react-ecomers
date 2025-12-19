@@ -10,6 +10,12 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import toast, { Toaster } from "react-hot-toast";
+import { FiPlus, FiSave } from "react-icons/fi";
+import {
+  HiOutlineCash,
+  HiOutlineCreditCard,
+  HiOutlineTrash,
+} from "react-icons/hi";
 
 const AddPaymentNumber = () => {
   // PAYMENT METHOD STATE
@@ -90,81 +96,121 @@ const AddPaymentNumber = () => {
     <div className="w-11/12 mx-auto font-mon mt-10">
       <Toaster position="top-right" />
 
-      <h2 className="text-2xl font-bold mb-5">Add Payment Method</h2>
+      {/* HEADER */}
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="text-3xl font-bold flex items-center gap-2 text-black">
+          <HiOutlineCreditCard className="text-gray-600" />
+          Payment Settings
+        </h2>
 
-      <form onSubmit={handlePaymentSubmit} className="space-y-4">
-        <input
-          name="payment_type"
-          value={payment.payment_type}
-          onChange={handlePaymentChange}
-          placeholder="Payment Type (Bkash, Nagad, Rocket)"
-          className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 focus:border-[#000000] focus:outline-none transition"
-          required
-        />
-
-        <input
-          name="payment_no"
-          value={payment.payment_no}
-          onChange={handlePaymentChange}
-          placeholder="Payment Number"
-          className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 focus:border-[#000000] focus:outline-none transition"
-          required
-        />
-
-        <button
-          type="submit"
-          className="px-4 py-2 bg-[#000000] text-white rounded mb-5"
-        >
-          Add Payment Method
-        </button>
-      </form>
-
-      {/* PAYMENT LIST */}
-      <h2 className="text-xl font-bold mt-5 mb-3">Payment Methods</h2>
-
-      <div className="mb-5 text-xl font-semibold text-[#21214c]">
-        Total Payment Method:{" "}
-        <span className="text-red-500">{paymentList.length}</span>
+        <div className="text-lg font-semibold text-gray-700">
+          Total Methods:
+          <span className="ml-2 px-3 py-1 bg-red-100 text-red-600 rounded-full text-sm">
+            {paymentList.length}
+          </span>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+      {/* ADD PAYMENT METHOD */}
+      <div className="bg-white border border-gray-200 rounded-2xl shadow p-6 mb-10">
+        <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+          <FiPlus />
+          Add Payment Method
+        </h3>
+
+        <form
+          onSubmit={handlePaymentSubmit}
+          className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
+          <input
+            name="payment_type"
+            value={payment.payment_type}
+            onChange={handlePaymentChange}
+            placeholder="Payment Type (Bkash, Nagad, Rocket)"
+            className="p-3 bg-gray-50 border border-gray-300 rounded-xl focus:border-black focus:outline-none"
+            required
+          />
+
+          <input
+            name="payment_no"
+            value={payment.payment_no}
+            onChange={handlePaymentChange}
+            placeholder="Payment Number"
+            className="p-3 bg-gray-50 border border-gray-300 rounded-xl focus:border-black focus:outline-none"
+            required
+          />
+
+          <button
+            type="submit"
+            className="md:col-span-2 px-6 py-3 bg-black text-white rounded-xl flex items-center justify-center gap-2 hover:bg-gray-800 transition"
+          >
+            <FiPlus />
+            Add Payment Method
+          </button>
+        </form>
+      </div>
+
+      {/* PAYMENT METHODS LIST */}
+      <h3 className="text-2xl font-bold mb-4">Payment Methods</h3>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-12">
         {paymentList.map((item) => (
           <div
-            className="border p-4 rounded-xl flex justify-between items-center border-gray-300"
             key={item.id}
+            className="bg-white border border-gray-200 rounded-2xl shadow hover:shadow-lg transition p-5 flex justify-between items-center"
           >
-            <div>
-              <p className="font-bold">{item.payment_type}</p>
-              <p>{item.payment_no}</p>
+            <div className="flex items-center gap-3">
+              <HiOutlineCash className="text-2xl text-gray-500" />
+              <div>
+                <p className="font-semibold text-gray-900">
+                  {item.payment_type}
+                </p>
+                <p className="text-sm text-gray-600">{item.payment_no}</p>
+              </div>
             </div>
 
             <button
               onClick={() => deletePayment(item.id)}
-              className="bg-[#000000] text-white px-3 py-1 rounded"
+              className="p-2 bg-black text-white rounded-xl hover:bg-red-600 transition"
+              title="Delete"
             >
-              Delete
+              <HiOutlineTrash />
             </button>
           </div>
         ))}
+
+        {paymentList.length === 0 && (
+          <p className="col-span-full text-center text-gray-500">
+            No payment methods added yet.
+          </p>
+        )}
       </div>
 
       {/* DELIVERY CHARGE */}
-      <h2 className="text-2xl font-bold mt-10 mb-5">Delivery Charge</h2>
-      <div className="flex flex-col sm:flex-row items-center gap-3">
-        <input
-          type="number"
-          min="0"
-          value={deliveryCharge}
-          onChange={handleDeliveryChargeChange}
-          placeholder="Delivery Charge (BDT)"
-          className="w-full sm:w-auto p-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 focus:border-[#000000] focus:outline-none transition"
-        />
-        <button
-          onClick={saveDeliveryCharge}
-          className="px-4 py-2 bg-[#000000] text-white rounded"
-        >
-          Save
-        </button>
+      <div className="bg-white border border-gray-200 rounded-2xl shadow p-6 mb-10">
+        <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
+          <HiOutlineCreditCard />
+          Delivery Charge
+        </h3>
+
+        <div className="flex flex-col sm:flex-row items-center gap-4">
+          <input
+            type="number"
+            min="0"
+            value={deliveryCharge}
+            onChange={handleDeliveryChargeChange}
+            placeholder="Delivery Charge (BDT)"
+            className="w-full sm:w-64 p-3 bg-gray-50 border border-gray-300 rounded-xl focus:border-black focus:outline-none"
+          />
+
+          <button
+            onClick={saveDeliveryCharge}
+            className="px-6 py-3 bg-black text-white rounded-xl flex items-center gap-2 hover:bg-gray-800 transition"
+          >
+            <FiSave />
+            Save Charge
+          </button>
+        </div>
       </div>
     </div>
   );

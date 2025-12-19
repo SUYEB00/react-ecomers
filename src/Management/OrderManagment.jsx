@@ -73,7 +73,7 @@ export default function AdminOrders() {
 
       <div className="mb-5 text-lg font-semibold text-gray-700">
         Total Orders:{" "}
-        <span className="text-red-500 font-bold">{orders.length}</span>
+        <span className="ml-2 px-3 py-1 bg-red-100 text-red-600 rounded-full text-sm">{orders.length}</span>
       </div>
 
       <div className="overflow-x-auto rounded-xl border border-gray-300 bg-white shadow-sm">
