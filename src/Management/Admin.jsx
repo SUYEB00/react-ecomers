@@ -6,6 +6,7 @@ import {
   FaImages,
   FaCreditCard,
   FaBoxOpen,
+  FaLink,
 } from "react-icons/fa";
 
 const AdminDashboard = () => {
@@ -48,6 +49,13 @@ const AdminDashboard = () => {
       icon: <FaBoxOpen />,
       path: "/addproducts",
     },
+    {
+  title: "Useful Links",
+  desc: "Helpful tools & resources",
+  icon: <FaLink />,
+  path: "/usefullinks",
+},
+
   ];
 
   return (

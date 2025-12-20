@@ -105,99 +105,120 @@ export default function Contact() {
   };
 
   return (
-    <div className="w-11/12 max-w-3xl mx-auto mt-30 font-pop">
+    <div className="flex min-h-screen items-start justify-center bg-[#ffffff] font-pop p-4 mt-30">
       <Toaster position="top-right" />
 
-      <h1 className="text-4xl font-bold text-center mb-2">Contact Support</h1>
+      <div className="w-full max-w-sm space-y-8">
+        {/* CONTACT FORM CARD */}
+        <div className="bg-white border border-gray-200 rounded-2xl shadow-lg p-6 sm:p-8">
+          <h1 className="text-3xl font-semibold text-center text-gray-900 mb-2">
+            Contact Support
+          </h1>
 
-      <p className="text-center text-gray-600 mb-10">
-        Submit a ticket and track admin replies
-      </p>
+          <p className="text-center text-sm text-gray-600 mb-6">
+            Submit a ticket and track admin replies
+          </p>
 
-      {/* FORM */}
-      <div className="bg-white border rounded-2xl shadow p-6 mb-16">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="relative">
-            <HiOutlineUser className="absolute left-3 top-3.5 text-gray-400" />
-            <input
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              placeholder="Your Name"
-              className="w-full pl-10 p-3 border rounded-xl"
-              required
-            />
-          </div>
-
-          <div className="relative">
-            <HiOutlineMail className="absolute left-3 top-3.5 text-gray-400" />
-            <input
-              value={email}
-              disabled
-              className="w-full pl-10 p-3 bg-gray-100 border rounded-xl"
-            />
-          </div>
-
-          <div className="relative">
-            <HiOutlineChatAlt2 className="absolute left-3 top-3.5 text-gray-400" />
-            <textarea
-              value={form.message}
-              onChange={(e) => setForm({ ...form, message: e.target.value })}
-              placeholder="Describe your issue..."
-              rows={4}
-              className="w-full pl-10 p-3 border rounded-xl"
-              required
-            />
-          </div>
-
-          <button
-            disabled={loading}
-            className="w-full py-3 bg-black text-white rounded-xl"
-          >
-            {loading ? "Submitting..." : "Submit Ticket"}
-          </button>
-        </form>
-      </div>
-
-      {/* HISTORY */}
-      {allMessages.length > 0 && (
-        <div className="space-y-6">
-          <h2 className="text-3xl font-bold text-center">🎫 Your Tickets</h2>
-
-          {allMessages.map((msg) => (
-            <div
-              key={msg.id}
-              className="bg-white border rounded-2xl p-6 shadow"
-            >
-              <div className="flex justify-between items-center mb-2">
-                <p className="font-semibold flex items-center gap-2">
-                  <HiOutlineTicket />
-                  {msg.ticketNo}
-                </p>
-
-                <span
-                  className={`flex items-center gap-1 px-3 py-1 rounded-full text-sm ${
-                    msg.replied
-                      ? "bg-green-100 text-green-700"
-                      : "bg-yellow-100 text-yellow-700"
-                  }`}
-                >
-                  {msg.replied ? <HiOutlineCheckCircle /> : <HiOutlineClock />}
-                  {msg.replied ? "Resolved" : "Waiting"}
-                </span>
-              </div>
-
-              <p className="text-gray-700">{msg.message}</p>
-
-              {msg.replied && (
-                <div className="mt-4 bg-green-50 border rounded-xl p-4">
-                  <p className="font-semibold text-green-700">Admin Reply</p>
-                  <p>{msg.reply}</p>
-                </div>
-              )}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Name */}
+            <div className="relative">
+              <HiOutlineUser className="absolute left-3 top-3.5 text-gray-400" />
+              <input
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                placeholder="Your name"
+                className="w-full pl-10 p-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 focus:border-black focus:outline-none transition"
+                required
+              />
             </div>
-          ))}
+
+            {/* Email */}
+            <div className="relative">
+              <HiOutlineMail className="absolute left-3 top-3.5 text-gray-400" />
+              <input
+                value={email}
+                disabled
+                className="w-full pl-10 p-3 bg-gray-100 border border-gray-300 rounded-xl text-gray-600 cursor-not-allowed"
+              />
+            </div>
+
+            {/* Message */}
+            <div className="relative">
+              <HiOutlineChatAlt2 className="absolute left-3 top-3.5 text-gray-400" />
+              <textarea
+                value={form.message}
+                onChange={(e) => setForm({ ...form, message: e.target.value })}
+                placeholder="Describe your issue..."
+                rows={4}
+                className="w-full pl-10 p-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 focus:border-black focus:outline-none transition resize-none"
+                required
+              />
+            </div>
+
+            <button
+              disabled={loading}
+              className="w-full p-3 rounded-xl bg-black text-white font-semibold transition disabled:opacity-60"
+            >
+              {loading ? "Submitting..." : "Submit Ticket"}
+            </button>
+          </form>
+
+          <p className="text-[13px] text-center text-gray-600 mt-5">
+            Our support team usually replies within 24 hours
+          </p>
         </div>
-      )}
+
+        {/* TICKET HISTORY CARD */}
+        {allMessages.length > 0 && (
+          <div className="bg-white border border-gray-200 rounded-2xl shadow-lg p-6 sm:p-8">
+            <h2 className="text-xl font-semibold text-center mb-6">
+              🎫 Your Tickets
+            </h2>
+
+            <div className="space-y-4">
+              {allMessages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className="border border-gray-200 rounded-xl p-4"
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <p className="font-semibold flex items-center gap-2 text-sm">
+                      <HiOutlineTicket />
+                      {msg.ticketNo}
+                    </p>
+
+                    <span
+                      className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs ${
+                        msg.replied
+                          ? "bg-green-100 text-green-700"
+                          : "bg-yellow-100 text-yellow-700"
+                      }`}
+                    >
+                      {msg.replied ? (
+                        <HiOutlineCheckCircle />
+                      ) : (
+                        <HiOutlineClock />
+                      )}
+                      {msg.replied ? "Resolved" : "Waiting"}
+                    </span>
+                  </div>
+
+                  <p className="text-gray-700 text-sm">{msg.message}</p>
+
+                  {msg.replied && (
+                    <div className="mt-3 bg-green-50 border border-green-200 rounded-xl p-3">
+                      <p className="font-semibold text-green-700 text-sm">
+                        Admin Reply
+                      </p>
+                      <p className="text-sm">{msg.reply}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

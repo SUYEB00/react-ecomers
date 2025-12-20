@@ -24,6 +24,7 @@ import AddSlider from "./Management/AddSlider";
 import AddPaymentNumber from "./Management/AddPaymentNumber";
 import AddProducts from "./Management/AddProducts";
 import AdminRoute from "./Management/AdminRoute";
+import UsefulLinks from "./Management/UsefulLinks";
 
 const router = createBrowserRouter([
   {
@@ -127,6 +128,14 @@ const router = createBrowserRouter([
     element: (
       <AdminRoute>
         <AddProducts />
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/usefullinks",
+    element: (
+      <AdminRoute>
+        <UsefulLinks />
       </AdminRoute>
     ),
   },

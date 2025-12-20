@@ -98,11 +98,14 @@ const AddProducts = () => {
   }, []);
 
   const deleteProduct = async (id) => {
-    if (!window.confirm("Delete this product?")) return;
-
-    await deleteDoc(doc(db, "Products", id));
-    toast.success("Product deleted!");
-    setProductsList(productsList.filter((item) => item.id !== id));
+    try {
+      await deleteDoc(doc(db, "Products", id));
+      toast.success("Product deleted!");
+      setProductsList(productsList.filter((item) => item.id !== id));
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete product");
+    }
   };
 
   const editProduct = (item) => {
