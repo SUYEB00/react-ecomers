@@ -1,9 +1,6 @@
 import React from "react";
 import toast, { Toaster } from "react-hot-toast";
-import {
-  HiOutlineClipboardCopy,
-  HiOutlineExternalLink,
-} from "react-icons/hi";
+import { HiOutlineClipboardCopy, HiOutlineExternalLink } from "react-icons/hi";
 
 const UsefulLinks = () => {
   const playgroundPrompt = `
@@ -32,6 +29,13 @@ amazon catalog style
       url: "https://www.canva.com/templates/EAFxnNPk5SE/",
       logo: "https://www.canva.com/favicon.ico",
     },
+    {
+      title: "ImageBB",
+      description: "Free image hosting service",
+      url: "https://imgbb.com/",
+      logo: "https://i.ibb.co/2k0X1Yb/imgbb-logo.png",
+    },
+
     {
       title: "YouTube – Banner Management",
       description: "Learn how to market products",
@@ -62,7 +66,7 @@ amazon catalog style
       url: "https://www.youtube.com/watch?v=VIDEO_ID_2",
       logo: "https://www.youtube.com/favicon.ico",
     },
-     {
+    {
       title: "YouTube – User Management",
       description: "Full-stack development guide",
       url: "https://www.youtube.com/watch?v=VIDEO_ID_2",
@@ -138,9 +142,7 @@ amazon catalog style
               </div>
             )}
 
-            <p className="text-xs text-blue-600 mt-4">
-              Open link →
-            </p>
+            <p className="text-xs text-blue-600 mt-4">Open link →</p>
           </a>
         ))}
       </div>

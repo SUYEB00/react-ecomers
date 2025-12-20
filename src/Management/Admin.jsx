@@ -50,12 +50,11 @@ const AdminDashboard = () => {
       path: "/addproducts",
     },
     {
-  title: "Useful Links",
-  desc: "Helpful tools & resources",
-  icon: <FaLink />,
-  path: "/usefullinks",
-},
-
+      title: "Useful Links",
+      desc: "Helpful tools & resources",
+      icon: <FaLink />,
+      path: "/usefullinks",
+    },
   ];
 
   return (
