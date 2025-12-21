@@ -15,7 +15,7 @@ const ProductCard = ({ product }) => {
 
   return (
     <div
-      className={`relative font-mon border border-gray-200 rounded-xl bg-white px-1 p-3 sm:p-3 shadow-sm max-w-[200px] min-w-[150px] lg:min-w-[180px] mx-auto
+      className={`relative font-mon border border-gray-200 rounded-xl bg-white p-3 sm:p-3 shadow-sm max-w-[200px] min-w-[150px] lg:min-w-[180px] mx-auto
         ${
           isOutOfStock
             ? "cursor-not-allowed opacity-70"
