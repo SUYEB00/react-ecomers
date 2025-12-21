@@ -38,37 +38,37 @@ amazon catalog style
 
     {
       title: "YouTube – Banner Management",
-      description: "Learn how to market products",
+      description: "Learn how to manage banner",
       url: "https://www.youtube.com/watch?v=VIDEO_ID_1",
       logo: "https://www.youtube.com/favicon.ico",
     },
     {
       title: "YouTube – Products Management",
-      description: "Full-stack development guide",
+      description: "Learn how to manage products",
       url: "https://www.youtube.com/watch?v=VIDEO_ID_2",
       logo: "https://www.youtube.com/favicon.ico",
     },
     {
       title: "YouTube – Payment Method Management",
-      description: "Full-stack development guide",
+      description: "Learn how to manage payment method",
       url: "https://www.youtube.com/watch?v=VIDEO_ID_2",
       logo: "https://www.youtube.com/favicon.ico",
     },
     {
       title: "YouTube – Order Management",
-      description: "Full-stack development guide",
+      description: "Learn how to manage order",
       url: "https://www.youtube.com/watch?v=VIDEO_ID_2",
       logo: "https://www.youtube.com/favicon.ico",
     },
     {
       title: "YouTube – Message Management",
-      description: "Full-stack development guide",
+      description: "Learn how to manage message",
       url: "https://www.youtube.com/watch?v=VIDEO_ID_2",
       logo: "https://www.youtube.com/favicon.ico",
     },
     {
       title: "YouTube – User Management",
-      description: "Full-stack development guide",
+      description: "Learn how to manage users",
       url: "https://www.youtube.com/watch?v=VIDEO_ID_2",
       logo: "https://www.youtube.com/favicon.ico",
     },
