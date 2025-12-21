@@ -94,7 +94,7 @@ export default function OrderHistory() {
               {/* STATUS */}
               <div className="flex justify-between mt-1">
                 <span>Status:</span>
-                <span className="font-semibold text-[#ff8f9c]">
+                <span className="font-semibold text-red-100">
                   {order.status}
                 </span>
               </div>
