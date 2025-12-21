@@ -6,6 +6,7 @@ import {
   doc,
   deleteDoc,
 } from "firebase/firestore";
+import { increment } from "firebase/firestore";
 import { db } from "../firebase";
 import toast, { Toaster } from "react-hot-toast";
 import {
@@ -39,7 +40,26 @@ export default function AdminOrders() {
 
   const updateStatus = async (orderId, newStatus) => {
     try {
-      await updateDoc(doc(db, "Orders", orderId), { status: newStatus });
+      const order = orders.find((o) => o.id === orderId);
+
+      if (!order) return;
+
+      if (order.status === "completed" && newStatus === "completed") {
+        return toast("Order already completed");
+      }
+
+      await updateDoc(doc(db, "Orders", orderId), {
+        status: newStatus,
+      });
+
+      if (newStatus === "completed" && order.status !== "completed") {
+        for (const item of order.items) {
+          await updateDoc(doc(db, "Products", item.id), {
+            sold: increment(1),
+          });
+        }
+      }
+
       toast.success("Order status updated!");
       fetchOrders();
     } catch (error) {

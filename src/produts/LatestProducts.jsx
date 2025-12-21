@@ -5,13 +5,12 @@ import "swiper/css";
 import "swiper/css/pagination";
 import toast from "react-hot-toast";
 
-import { FaStar } from "react-icons/fa";
-import { FaRegStarHalfStroke } from "react-icons/fa6";
 import { FiTrendingUp } from "react-icons/fi";
 
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
+import { HiOutlineBadgeCheck } from "react-icons/hi";
 
 export default function LatestProducts() {
   const [products, setProducts] = useState([]);
@@ -83,10 +82,12 @@ export default function LatestProducts() {
                     {product.title}
                   </h3>
 
-                  <div className="flex text-yellow-400 text-xs sm:text-sm">
-                    <FaStar /> <FaStar /> <FaStar /> <FaStar />
-                    <FaRegStarHalfStroke />
-                  </div>
+                  {product.sold !== undefined && (
+                    <span className="flex items-center gap-1 text-[10px] text-green-600">
+                      <HiOutlineBadgeCheck className="text-xs" />
+                      {product.sold} sold
+                    </span>
+                  )}
 
                   <div className="flex items-center gap-2 mt-1">
                     <p className="line-through text-gray-400 text-[10px] sm:text-sm">

@@ -1,6 +1,5 @@
 import React from "react";
-import { FaStar } from "react-icons/fa";
-import { FaRegStarHalfStroke } from "react-icons/fa6";
+import { HiOutlineBadgeCheck } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
@@ -16,7 +15,7 @@ const ProductCard = ({ product }) => {
 
   return (
     <div
-      className={`relative font-mon border border-gray-200 rounded-xl bg-white p-3 sm:p-3 shadow-sm max-w-[200px] sm:max-w-xs mx-auto
+      className={`relative font-mon border border-gray-200 rounded-xl bg-white p-3 sm:p-3 shadow-sm max-w-[200px] min-w-[150px] lg:min-w-[180px] mx-auto
         ${
           isOutOfStock
             ? "cursor-not-allowed opacity-70"
@@ -62,9 +61,12 @@ const ProductCard = ({ product }) => {
           {product.title?.split(" ").length > 2 && "..."}
         </h3>
 
-        <div className="flex text-yellow-400 mt-1 text-xs">
-          <FaStar /> <FaStar /> <FaStar /> <FaStar /> <FaRegStarHalfStroke />
-        </div>
+        {product.sold !== undefined && (
+          <span className="flex items-center gap-1 text-[10px] text-green-600">
+            <HiOutlineBadgeCheck className="text-xs" />
+            {product.sold} sold
+          </span>
+        )}
 
         <div className="mt-1 flex items-center gap-1">
           <p className="line-through text-gray-400 text-xs">

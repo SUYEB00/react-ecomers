@@ -28,6 +28,7 @@ const AddProducts = () => {
     category: "",
     sizes: [],
     stock: 0,
+    sold: 0,
     inStock: true,
   });
 

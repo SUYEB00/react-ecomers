@@ -5,11 +5,11 @@ import "swiper/css";
 import "swiper/css/pagination";
 
 import { FaClock, FaStar } from "react-icons/fa";
-import { FaRegStarHalfStroke } from "react-icons/fa6";
 
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
+import { HiOutlineBadgeCheck } from "react-icons/hi";
 
 export default function NewArrivals() {
   const [products, setProducts] = useState([]);
@@ -83,10 +83,12 @@ export default function NewArrivals() {
                   {product.title}
                 </h3>
 
-                <div className="flex text-yellow-400 text-xs sm:text-sm">
-                  <FaStar /> <FaStar /> <FaStar /> <FaStar />
-                  <FaRegStarHalfStroke />
-                </div>
+                {product.sold !== undefined && (
+                  <span className="flex items-center gap-1 text-[10px] text-green-600">
+                    <HiOutlineBadgeCheck className="text-xs" />
+                    {product.sold} sold
+                  </span>
+                )}
 
                 <div className="flex items-center gap-2 mt-1">
                   <strong className="text-xs sm:text-base">
