@@ -28,16 +28,21 @@ export default function Signup() {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
+      const role =
+        user.email?.toLowerCase() === "suaibhasan845@gmail.com"
+          ? "admin"
+          : "user";
+
       await setDoc(
         doc(db, "Users", user.uid),
         {
           uid: user.uid,
           name: user.displayName,
           email: user.email,
-          role: "user",
+          role,
           createdAt: new Date().toISOString(),
         },
-        { merge: true }
+        { merge: true },
       );
 
       toast.success("Logged in with Google!");
@@ -57,18 +62,21 @@ export default function Signup() {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
       );
 
       const user = userCredential.user;
 
       await updateProfile(user, { displayName: name });
 
+      const role =
+        email.toLowerCase() === "suaibhasan845@gmail.com" ? "admin" : "user";
+
       await setDoc(doc(db, "Users", user.uid), {
         uid: user.uid,
         name: name,
         email: email,
-        role: "user",
+        role,
         createdAt: new Date().toISOString(),
       });
 

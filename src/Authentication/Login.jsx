@@ -41,16 +41,21 @@ export default function Login() {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
+      const role =
+        user.email?.toLowerCase() === "suaibhasan845@gmail.com"
+          ? "admin"
+          : "user";
+
       await setDoc(
         doc(db, "Users", user.uid),
         {
           uid: user.uid,
           name: user.displayName,
           email: user.email,
-          role: "user",
+          role: role,
           createdAt: new Date().toISOString(),
         },
-        { merge: true }
+        { merge: true },
       );
 
       toast.success("Logged in with Google!");
