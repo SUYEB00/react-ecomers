@@ -1,22 +1,61 @@
 import React from "react";
+
+import { useEffect, useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase";
+
 export default function PaymentDelivery({ className = "" }) {
+  const [logos, setLogos] = useState({});
+
+  useEffect(() => {
+    const fetchLogos = async () => {
+      try {
+        const snap = await getDoc(doc(db, "Settings", "LogoLinks"));
+
+        if (snap.exists()) {
+          setLogos(snap.data());
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchLogos();
+  }, []);
+
   const payments = [
-    { name: "bKash", src: "https://i.ibb.co.com/XZnyd5PX/Bkash.png" },
-    { name: "Nagad", src: "https://i.ibb.co.com/LDZgD3tr/nagad.png" },
+    {
+      name: "bKash",
+      src: logos.bkash,
+    },
+    {
+      name: "Nagad",
+      src: logos.nagad,
+    },
     {
       name: "Rocket",
-      src: "https://i.ibb.co.com/XrjX7CXS/d6621b10013ac98c8b3b3bc7a03fbf6580b5be6ab5e35898b6a7942177963e90-200.jpg",
+      src: logos.rocket,
     },
-  ];
+    {
+      name: "COD",
+      src: logos.cod,
+    },
+  ].filter((item) => item.src);
 
   const deliveries = [
-    { name: "Pathao", src: "https://i.ibb.co.com/Kzb1kg3Q/pathao.png" },
     {
-      name: "Sundarbon Courier",
-      src: "https://i.ibb.co.com/n8bTVHF4/sundorbon.png",
+      name: "Pathao",
+      src: logos.pathao,
     },
-    { name: "Steedfast", src: "https://i.ibb.co.com/Y5MC72X/steadfast.jpg" },
-  ];
+    {
+      name: "Sundarban Courier",
+      src: logos.sundorban,
+    },
+    {
+      name: "Steadfast",
+      src: logos.steadfast,
+    },
+  ].filter((item) => item.src);
 
   return (
     <section
@@ -38,18 +77,24 @@ export default function PaymentDelivery({ className = "" }) {
               Bangladesh.
             </p>
 
-            <div className="grid grid-cols-3 gap-4 sm:grid-cols-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {payments.map((p) => (
                 <div
                   key={p.name}
                   className="flex items-center justify-center p-3 bg-gray-50 dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-150"
                 >
                   {/* If you prefer SVG inline logos, replace the <img> with the SVG. */}
-                  <img
-                    src={p.src}
-                    alt={p.name + " logo"}
-                    className="h-10 object-contain"
-                  />
+                  <div className="flex flex-col items-center">
+                    <img
+                      src={p.src}
+                      alt={p.name}
+                      className="h-10 object-contain mb-2"
+                    />
+
+                    <span className="text-xs text-gray-600 dark:text-gray-300">
+                      {p.name}
+                    </span>
+                  </div>
                 </div>
               ))}
             </div>

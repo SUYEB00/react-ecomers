@@ -6,6 +6,8 @@ import {
   addDoc,
   getDocs,
   serverTimestamp,
+  doc,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import toast, { Toaster } from "react-hot-toast";
@@ -55,6 +57,7 @@ export default function Checkout() {
 
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [selectedPayment, setSelectedPayment] = useState(null);
+  const [logos, setLogos] = useState({});
 
   useEffect(() => {
     const fetchDeliveryCharge = async () => {
@@ -79,7 +82,32 @@ export default function Checkout() {
     fetchPayments();
   }, []);
 
+  useEffect(() => {
+    const fetchLogos = async () => {
+      try {
+        const snap = await getDoc(doc(db, "Settings", "LogoLinks"));
+
+        if (snap.exists()) {
+          setLogos(snap.data());
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchLogos();
+  }, []);
+
   const [loading, setLoading] = useState(false);
+
+  const copyNumber = async (number) => {
+    try {
+      await navigator.clipboard.writeText(number);
+      toast.success("Number copied!");
+    } catch (error) {
+      toast.error("Failed to copy");
+    }
+  };
 
   const handleOrder = async () => {
     if (!form.name || !form.address) {
@@ -94,7 +122,7 @@ export default function Checkout() {
       return toast.error("Please select a size");
     }
 
-    if (selectedPayment?.payment_type !== "COD" && !form.trxId) {
+    if (!form.trxId) {
       return toast.error("Transaction ID is required");
     }
 
@@ -115,9 +143,11 @@ export default function Checkout() {
         deliveryCharge,
         totalPrice: grandTotal,
 
-        codPayable: selectedPayment?.payment_type === "COD" ? grandTotal : 0,
+        codPayable:
+          selectedPayment?.payment_type === "COD" ? totalProductPrice : 0,
 
-        onlinePaid: selectedPayment?.payment_type === "COD" ? 0 : grandTotal,
+        onlinePaid:
+          selectedPayment?.payment_type === "COD" ? deliveryCharge : grandTotal,
 
         trxId: selectedPayment?.payment_type === "COD" ? "COD" : form.trxId,
 
@@ -163,10 +193,21 @@ export default function Checkout() {
 
   const totalProductPrice = itemsToShow.reduce(
     (total, item) => total + item.quantity * Number(item.newprice),
-    0
+    0,
   );
 
   const grandTotal = totalProductPrice + deliveryCharge;
+
+  const getPaymentLogo = (type) => {
+    const name = type?.toLowerCase();
+
+    if (name.includes("bkash")) return logos.bkash;
+    if (name.includes("nagad")) return logos.nagad;
+    if (name.includes("rocket")) return logos.rocket;
+    if (name.includes("cod")) return logos.cod;
+
+    return null;
+  };
 
   return (
     <div className="w-11/12 mx-auto mt-6 max-w-xl font-pop">
@@ -300,35 +341,33 @@ export default function Checkout() {
             Payment Method
           </h3>
 
-          {paymentMethods.map((pm) => (
-            <label
-              key={pm.id}
-              className={`flex items-center gap-3 p-4 mb-2 border rounded-xl cursor-pointer transition
-          ${
-            selectedPayment?.id === pm.id
-              ? "border-black bg-gray-50"
-              : "bg-white"
-          }`}
-            >
-              <input
-                type="radio"
-                checked={selectedPayment?.id === pm.id}
-                onChange={() => setSelectedPayment(pm)}
-              />
-
-              <div className="flex items-center gap-2">
-                {pm.payment_type === "COD" ? (
-                  <IoCashOutline className="text-xl" />
+          <div className="grid grid-cols-3 gap-3">
+            {paymentMethods.map((pm) => (
+              <button
+                key={pm.id}
+                type="button"
+                onClick={() => setSelectedPayment(pm)}
+                className={`border rounded-xl p-4 transition flex flex-col items-center justify-center gap-2
+      ${
+        selectedPayment?.id === pm.id
+          ? "border-black bg-black text-white"
+          : "border-gray-300 bg-white text-black"
+      }`}
+              >
+                {getPaymentLogo(pm.payment_type) ? (
+                  <img
+                    src={getPaymentLogo(pm.payment_type)}
+                    alt={pm.payment_type}
+                    className="w-10 h-10 object-contain rounded-md"
+                  />
                 ) : (
-                  <HiOutlineCreditCard className="text-xl" />
+                  <HiOutlineCreditCard className="text-3xl" />
                 )}
-                <div>
-                  <p className="font-semibold">{pm.payment_type}</p>
-                  <p className="text-sm text-gray-600">{pm.payment_no}</p>
-                </div>
-              </div>
-            </label>
-          ))}
+
+                <span className="text-sm font-semibold">{pm.payment_type}</span>
+              </button>
+            ))}
+          </div>
 
           {selectedPayment?.payment_type === "COD" ? (
             <div className="mt-3 p-4 rounded-xl bg-yellow-50 border border-yellow-300 text-sm text-yellow-800 space-y-1">
@@ -338,13 +377,28 @@ export default function Checkout() {
               </div>
 
               <p>
-                Pay <strong>{grandTotal} BDT</strong> directly to the delivery
-                person at the time of delivery.
+                First pay the delivery charge of{" "}
+                <strong>{deliveryCharge} BDT</strong> to:
+              </p>
+
+              <button
+                type="button"
+                onClick={() => copyNumber("01940686844")}
+                className="font-semibold underline text-left hover:opacity-80"
+              >
+                Nagad / bKash: 01940686844
+                <span className="ml-2 text-xs">(Tap to Copy)</span>
+              </button>
+
+              <p>
+                The remaining product price of{" "}
+                <strong>{totalProductPrice} BDT</strong> will be paid to the
+                delivery person upon delivery.
               </p>
 
               <p className="text-xs text-yellow-700">
-                No online payment is required. Please keep the full amount ready
-                in cash.
+                After sending the delivery charge, enter the transaction ID
+                below.
               </p>
             </div>
           ) : (
@@ -358,9 +412,14 @@ export default function Checkout() {
                 Pay <strong>{grandTotal} BDT</strong> to:
               </p>
 
-              <p className="font-semibold">
+              <button
+                type="button"
+                onClick={() => copyNumber(selectedPayment?.payment_no)}
+                className="font-semibold underline text-left hover:opacity-80"
+              >
                 {selectedPayment?.payment_type} – {selectedPayment?.payment_no}
-              </p>
+                <span className="ml-2 text-xs">(Tap to Copy)</span>
+              </button>
 
               <p className="text-xs text-blue-700">
                 After payment, please enter your transaction ID below.
@@ -369,15 +428,18 @@ export default function Checkout() {
           )}
         </div>
 
-        {selectedPayment?.payment_type !== "COD" && (
-          <input
-            name="trxId"
-            onChange={handleChange}
-            placeholder="Transaction ID"
-            className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl"
-            required
-          />
-        )}
+        <input
+          name="trxId"
+          value={form.trxId}
+          onChange={handleChange}
+          placeholder={
+            selectedPayment?.payment_type === "COD"
+              ? "Delivery Charge Transaction ID"
+              : "Transaction ID"
+          }
+          className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl"
+          required
+        />
 
         <button
           onClick={handleOrder}

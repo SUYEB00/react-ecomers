@@ -21,6 +21,9 @@ export default function Navbar() {
   const { cart } = useCart();
   const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
 
+  const [websiteName, setWebsiteName] = useState("");
+  const [loadingWebsiteName, setLoadingWebsiteName] = useState(true);
+
   const link = (
     <>
       <li
@@ -74,6 +77,24 @@ export default function Navbar() {
   };
 
   useEffect(() => {
+    const fetchWebsiteSettings = async () => {
+      try {
+        const docSnap = await getDoc(doc(db, "Settings", "Website"));
+
+        if (docSnap.exists()) {
+          setWebsiteName(docSnap.data().websiteName || "");
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoadingWebsiteName(false);
+      }
+    };
+
+    fetchWebsiteSettings();
+  }, []);
+
+  useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       setUser(user);
 
@@ -119,9 +140,23 @@ export default function Navbar() {
           <div className="flex items-center gap-10">
             <a
               onClick={() => navigate("/")}
-              className="lg:text-4xl sm:text-2xl font-mon font-bold text-[#000000]"
+              className="lg:text-4xl sm:text-2xl font-mon font-bold text-[#000000] cursor-pointer"
             >
-              TRENDZONE
+              {websiteName?.trim() ? (
+                websiteName
+              ) : (
+                <span className="flex items-center gap-1">
+                  <span className="w-2 h-2 bg-black rounded-full animate-bounce"></span>
+                  <span
+                    className="w-2 h-2 bg-black rounded-full animate-bounce"
+                    style={{ animationDelay: "0.15s" }}
+                  ></span>
+                  <span
+                    className="w-2 h-2 bg-black rounded-full animate-bounce"
+                    style={{ animationDelay: "0.3s" }}
+                  ></span>
+                </span>
+              )}
             </a>
             <div className="navbar-center hidden lg:flex">
               <ul className="flex gap-6">{link}</ul>

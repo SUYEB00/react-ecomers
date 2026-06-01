@@ -23,6 +23,9 @@ const AddProducts = () => {
     title: "",
     product_description: "",
     product_picture: "",
+    image2: "",
+    image3: "",
+    image4: "",
     oldprice: "",
     newprice: "",
     category: "",
@@ -70,6 +73,9 @@ const AddProducts = () => {
         title: "",
         product_description: "",
         product_picture: "",
+        image2: "",
+        image3: "",
+        image4: "",
         oldprice: "",
         newprice: "",
         category: "",
@@ -115,6 +121,9 @@ const AddProducts = () => {
       title: item.title,
       product_description: item.product_description,
       product_picture: item.product_picture,
+      image2: item.image2 || "",
+      image3: item.image3 || "",
+      image4: item.image4 || "",
       oldprice: item.oldprice,
       newprice: item.newprice,
       category: item.category,
@@ -175,6 +184,30 @@ const AddProducts = () => {
             placeholder="Image URL"
             className="p-3 bg-gray-50 border border-gray-300 rounded-xl focus:border-black focus:outline-none md:col-span-2"
             required
+          />
+
+          <input
+            name="image2"
+            value={product.image2}
+            onChange={handleChange}
+            placeholder="Optional Image URL 2"
+            className="p-3 bg-gray-50 border border-gray-300 rounded-xl focus:border-black focus:outline-none md:col-span-2"
+          />
+
+          <input
+            name="image3"
+            value={product.image3}
+            onChange={handleChange}
+            placeholder="Optional Image URL 3"
+            className="p-3 bg-gray-50 border border-gray-300 rounded-xl focus:border-black focus:outline-none md:col-span-2"
+          />
+
+          <input
+            name="image4"
+            value={product.image4}
+            onChange={handleChange}
+            placeholder="Optional Image URL 4"
+            className="p-3 bg-gray-50 border border-gray-300 rounded-xl focus:border-black focus:outline-none md:col-span-2"
           />
 
           <input

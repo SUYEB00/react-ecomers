@@ -3,7 +3,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { HiOutlineClipboardCopy, HiOutlineExternalLink } from "react-icons/hi";
 
 const UsefulLinks = () => {
-  const playgroundPrompt = `
+  const chatgptPrompt = `
 product photography,
 studio lighting from top-left,
 soft realistic shadow below,
@@ -17,11 +17,12 @@ amazon catalog style
 
   const links = [
     {
-      title: "Playground AI",
-      description: "Generate AI product images",
-      url: "https://playgroundai.com",
-      logo: "https://playgroundai.com/favicon.ico",
-      type: "playground",
+      title: "ChatGPT",
+      description:
+        "AI assistant for content, coding, product descriptions and more",
+      url: "https://chatgpt.com",
+      logo: "https://chatgpt.com/favicon.ico",
+      type: "chatgpt",
     },
     {
       title: "Canva Templates",
@@ -117,15 +118,15 @@ amazon catalog style
 
             <p className="text-sm text-gray-600">{link.description}</p>
 
-            {/* PLAYGROUND PROMPT */}
-            {link.type === "playground" && (
+            {/* CHATGPT PROMPT */}
+            {link.type === "chatgpt" && (
               <div className="mt-4 p-3 bg-gray-50 border border-dashed rounded-xl">
                 <p className="font-semibold text-sm mb-2">
                   Ready-to-Use Prompt
                 </p>
 
                 <pre className="text-xs text-gray-700 whitespace-pre-wrap mb-3">
-                  {playgroundPrompt}
+                  {chatgptPrompt}
                 </pre>
 
                 <button

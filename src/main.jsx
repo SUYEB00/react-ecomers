@@ -25,6 +25,7 @@ import AddPaymentNumber from "./Management/AddPaymentNumber";
 import AddProducts from "./Management/AddProducts";
 import AdminRoute from "./Management/AdminRoute";
 import UsefulLinks from "./Management/UsefulLinks";
+import PageSettings from "./Management/pagesettings";
 
 const router = createBrowserRouter([
   {
@@ -139,6 +140,14 @@ const router = createBrowserRouter([
       </AdminRoute>
     ),
   },
+  {
+    path: "/pagesetting",
+    element: (
+      <AdminRoute>
+        <PageSettings />
+      </AdminRoute>
+    ),
+  },
 ]);
 
 const root = document.getElementById("root");
@@ -146,5 +155,5 @@ const root = document.getElementById("root");
 ReactDOM.createRoot(root).render(
   <CartProvider>
     <RouterProvider router={router} />
-  </CartProvider>
+  </CartProvider>,
 );

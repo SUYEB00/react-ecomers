@@ -28,7 +28,7 @@ const ProductCard = ({ product }) => {
         {Math.round(
           ((Number(product.oldprice) - Number(product.newprice)) /
             Number(product.oldprice)) *
-            100
+            100,
         )}
         %
       </div>
@@ -41,8 +41,8 @@ const ProductCard = ({ product }) => {
               isOutOfStock
                 ? "bg-gray-500"
                 : product.stock <= 5
-                ? "bg-orange-500"
-                : "bg-green-600"
+                  ? "bg-orange-500"
+                  : "bg-green-600"
             }`}
         >
           Stock: {product.stock}

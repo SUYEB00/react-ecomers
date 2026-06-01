@@ -1,6 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 export default function About() {
+  const [settings, setSettings] = useState({
+    websiteName: "",
+  });
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const docSnap = await getDoc(doc(db, "Settings", "Website"));
+
+        if (docSnap.exists()) {
+          setSettings(docSnap.data());
+        }
+      } catch (error) {
+        console.error("Failed to load settings:", error);
+      }
+    };
+
+    fetchSettings();
+  }, []);
+
+  const websiteName = settings.websiteName;
+
+  const LoadingDots = () => (
+    <span className="inline-flex items-center gap-1">
+      <span className="w-2 h-2 bg-black rounded-full animate-bounce"></span>
+      <span
+        className="w-2 h-2 bg-black rounded-full animate-bounce"
+        style={{ animationDelay: "0.15s" }}
+      />
+      <span
+        className="w-2 h-2 bg-black rounded-full animate-bounce"
+        style={{ animationDelay: "0.3s" }}
+      />
+    </span>
+  );
+
   return (
     <div className="w-11/12 max-w-4xl mx-auto mt-30 font-pop">
       <h1 className="text-4xl font-bold text-center text-[#000000] mb-6">
@@ -9,9 +47,11 @@ export default function About() {
 
       <div className="space-y-6 text-gray-700">
         <p className="text-lg leading-7">
-          Welcome to <strong>TrendZone</strong>! We are committed to providing
-          the best products and services to our valued customers. Our goal is to
-          create a seamless and enjoyable shopping experience.
+          Welcome to{" "}
+          <strong>{websiteName?.trim() ? websiteName : <LoadingDots />}</strong>
+          ! We are committed to providing the best products and services to our
+          valued customers. Our goal is to create a seamless and enjoyable
+          shopping experience.
         </p>
 
         <p className="text-lg leading-7">
@@ -21,14 +61,15 @@ export default function About() {
         </p>
 
         <p className="text-lg leading-7">
-          Whether you’re shopping for the latest products, exploring special
+          Whether you're shopping for the latest products, exploring special
           offers, or just browsing, we are here to make your experience smooth
           and enjoyable. Your happiness is our priority!
         </p>
 
         <p className="text-lg leading-7">
-          Thank you for choosing <strong>TrendZone</strong>. We hope to see you
-          back often!
+          Thank you for choosing{" "}
+          <strong>{websiteName?.trim() ? websiteName : <LoadingDots />}</strong>
+          . We hope to see you back often!
         </p>
       </div>
 

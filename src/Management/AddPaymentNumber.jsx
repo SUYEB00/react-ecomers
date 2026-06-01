@@ -23,6 +23,16 @@ const AddPaymentNumber = () => {
     payment_no: "",
   });
 
+  const [logos, setLogos] = useState({
+    bkash: "",
+    nagad: "",
+    rocket: "",
+    cod: "",
+    sundorban: "",
+    pathao: "",
+    steadfast: "",
+  });
+
   const [paymentList, setPaymentList] = useState([]);
 
   const [deliveryCharge, setDeliveryCharge] = useState("");
@@ -61,6 +71,17 @@ const AddPaymentNumber = () => {
     }
   };
 
+  const saveLogos = async () => {
+    try {
+      await setDoc(doc(db, "Settings", "LogoLinks"), logos);
+
+      toast.success("Logo links updated!");
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to update logos");
+    }
+  };
+
   const fetchPaymentMethods = async () => {
     const querySnapshot = await getDocs(collection(db, "PaymentMethods"));
     const items = querySnapshot.docs.map((doc) => ({
@@ -73,6 +94,12 @@ const AddPaymentNumber = () => {
     if (deliveryDoc.exists()) {
       setDeliveryCharge(deliveryDoc.data().charge);
     }
+
+    const logoDoc = await getDoc(doc(db, "Settings", "LogoLinks"));
+
+    if (logoDoc.exists()) {
+      setLogos(logoDoc.data());
+    }
   };
 
   useEffect(() => {
@@ -83,6 +110,13 @@ const AddPaymentNumber = () => {
     await deleteDoc(doc(db, "PaymentMethods", id));
     toast.success("Payment method deleted!");
     setPaymentList(paymentList.filter((item) => item.id !== id));
+  };
+
+  const handleLogoChange = (e) => {
+    setLogos({
+      ...logos,
+      [e.target.name]: e.target.value,
+    });
   };
 
   return (
@@ -204,6 +238,76 @@ const AddPaymentNumber = () => {
             Save Charge
           </button>
         </div>
+      </div>
+
+      <div className="bg-white border border-gray-200 rounded-2xl shadow p-6 mb-10">
+        <h3 className="text-2xl font-bold mb-4">Logo Management</h3>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input
+            name="bkash"
+            value={logos.bkash}
+            onChange={handleLogoChange}
+            placeholder="bKash Logo URL"
+            className="p-3 border rounded-xl"
+          />
+
+          <input
+            name="nagad"
+            value={logos.nagad}
+            onChange={handleLogoChange}
+            placeholder="Nagad Logo URL"
+            className="p-3 border rounded-xl"
+          />
+
+          <input
+            name="rocket"
+            value={logos.rocket}
+            onChange={handleLogoChange}
+            placeholder="Rocket Logo URL"
+            className="p-3 border rounded-xl"
+          />
+
+          <input
+            name="cod"
+            value={logos.cod}
+            onChange={handleLogoChange}
+            placeholder="COD Logo URL"
+            className="p-3 border rounded-xl"
+          />
+
+          <input
+            name="sundorban"
+            value={logos.sundorban}
+            onChange={handleLogoChange}
+            placeholder="Sundorban Logo URL"
+            className="p-3 border rounded-xl"
+          />
+
+          <input
+            name="pathao"
+            value={logos.pathao}
+            onChange={handleLogoChange}
+            placeholder="Pathao Logo URL"
+            className="p-3 border rounded-xl"
+          />
+
+          <input
+            name="steadfast"
+            value={logos.steadfast}
+            onChange={handleLogoChange}
+            placeholder="Steadfast Logo URL"
+            className="p-3 border rounded-xl"
+          />
+        </div>
+
+        <button
+          onClick={saveLogos}
+          className="mt-5 px-6 py-3 bg-black text-white rounded-xl flex items-center gap-2"
+        >
+          <FiSave />
+          Save Logo Links
+        </button>
       </div>
     </div>
   );

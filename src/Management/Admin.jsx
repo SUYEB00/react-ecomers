@@ -8,11 +8,18 @@ import {
   FaBoxOpen,
   FaLink,
 } from "react-icons/fa";
+import { IoSettings } from "react-icons/io5";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
 
   const cards = [
+    {
+      title: "Page Settings",
+      desc: "Manage Page Details",
+      icon: <IoSettings />,
+      path: "/pagesetting",
+    },
     {
       title: "Order Management",
       desc: "View & verify customer orders",
