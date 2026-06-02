@@ -149,7 +149,7 @@ export default function Checkout() {
         onlinePaid:
           selectedPayment?.payment_type === "COD" ? deliveryCharge : grandTotal,
 
-        trxId: selectedPayment?.payment_type === "COD" ? "COD" : form.trxId,
+        trxId: form.trxId,
 
         payment_type: selectedPayment.payment_type,
         payment_no: selectedPayment.payment_no,
@@ -350,7 +350,7 @@ export default function Checkout() {
                 className={`border rounded-xl p-4 transition flex flex-col items-center justify-center gap-2
       ${
         selectedPayment?.id === pm.id
-          ? "border-black bg-black text-white"
+          ? "border-gray-400 bg-gray-300 text-white"
           : "border-gray-300 bg-white text-black"
       }`}
               >

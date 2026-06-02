@@ -9,7 +9,7 @@ const TermsOfUse = () => {
           Terms & Conditions
         </h1>
         <p className="text-sm text-gray-500 text-center mb-8">
-          Last updated: [Your Date]
+          Last updated: 02/06/2026
         </p>
 
         {/* Intro */}
@@ -112,7 +112,7 @@ const TermsOfUse = () => {
         <p className="text-gray-600 mb-1">
           For any questions or help, reach us:
         </p>
-        <p className="text-gray-700 font-semibold">Email: [Your Email]</p>
+        <p className="text-gray-700 font-semibold">Email: trendzone033@gmail.com</p>
       </div>
     </div>
   );

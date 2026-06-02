@@ -20,7 +20,7 @@ export default function OrderHistory() {
       try {
         const q = query(
           collection(db, "Orders"),
-          where("userEmail", "==", user.email)
+          where("userEmail", "==", user.email),
         );
 
         const snap = await getDocs(q);
@@ -99,14 +99,24 @@ export default function OrderHistory() {
                     order.status === "completed"
                       ? "bg-green-100 text-green-700"
                       : order.status === "pending"
-                      ? "bg-yellow-100 text-yellow-700"
-                      : order.status === "out of stock"
-                      ? "bg-orange-100 text-orange-700"
-                      : "bg-red-100 text-red-700"
+                        ? "bg-yellow-100 text-yellow-700"
+                        : order.status === "out of stock"
+                          ? "bg-orange-100 text-orange-700"
+                          : "bg-red-100 text-red-700"
                   }`}
                 >
                   {order.status}
                 </span>
+              </div>
+
+              <div className="flex justify-between items-center mt-1">
+                <span>Payment Method:</span>
+                <span>{order.payment_type}</span>
+              </div>
+
+              <div className="flex justify-between items-center mt-1">
+                <span>Transaction ID:</span>
+                <span>{order.trxId || "N/A"}</span>
               </div>
 
               {/* ORDER DATE */}
