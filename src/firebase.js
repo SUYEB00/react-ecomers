@@ -7,7 +7,7 @@ import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDDYfLJ4ZXmja3QD0urdQkFRfipES6yvfY",
-  authDomain: "https://www.trenzone.xyz/",
+  authDomain: "trendzonelive-8ad9d.firebaseapp.com",
   projectId: "trendzonelive-8ad9d",
   storageBucket: "trendzonelive-8ad9d.firebasestorage.app",
   messagingSenderId: "615872759803",
