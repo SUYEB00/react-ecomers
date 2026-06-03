@@ -306,21 +306,30 @@ export default function Checkout() {
 
         {productWithSizes && (
           <div>
-            <label className="block mb-1 font-semibold">Select Size</label>
-            <select
-              name="size"
-              value={form.size}
-              onChange={handleChange}
-              className="w-full p-3 border rounded-xl"
-              required
-            >
-              <option value="">Choose size</option>
+            <label className="block mb-2 font-semibold">Select Size</label>
+
+            <div className="flex flex-wrap gap-2">
               {productWithSizes.sizes.map((size) => (
-                <option key={size} value={size}>
+                <button
+                  key={size}
+                  type="button"
+                  onClick={() =>
+                    setForm((prev) => ({
+                      ...prev,
+                      size,
+                    }))
+                  }
+                  className={`min-w-[48px] h-12 px-4 rounded-lg border font-medium transition
+            ${
+              form.size === size
+                ? "bg-gray-300 text-white border-gray-400"
+                : "bg-white text-black border-gray-300 hover:border-black"
+            }`}
+                >
                   {size}
-                </option>
+                </button>
               ))}
-            </select>
+            </div>
           </div>
         )}
 

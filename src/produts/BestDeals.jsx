@@ -30,7 +30,8 @@ export default function BestDeals() {
       data = data.map((p) => ({
         ...p,
         discountPercent: Math.round(
-          ((Number(p.oldprice) - Number(p.newprice)) / Number(p.oldprice)) * 100
+          ((Number(p.oldprice) - Number(p.newprice)) / Number(p.oldprice)) *
+            100,
         ),
       }));
 

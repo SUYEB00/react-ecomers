@@ -1,6 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 const PrivacyPolicy = () => {
+  
+const [settings, setSettings] = useState({
+  websiteName: "",
+  email: "",
+});
+
+useEffect(() => {
+  const fetchSettings = async () => {
+    try {
+      const docSnap = await getDoc(doc(db, "Settings", "Website"));
+
+      if (docSnap.exists()) {
+        setSettings(docSnap.data());
+      }
+    } catch (error) {
+      console.error("Failed to load settings:", error);
+    }
+  };
+
+  fetchSettings();
+}, []);
+
   return (
     <div className="min-h-screen bg-[#FDFDFE] py-10 px-4 md:px-16 font-sans">
       <div className="max-w-5xl mx-auto bg-white rounded-xl shadow-md p-8 md:p-12">
@@ -14,10 +38,27 @@ const PrivacyPolicy = () => {
 
         {/* Intro */}
         <p className="text-gray-600 mb-6">
-          Welcome to <strong>TrendZone</strong> (“we”, “our”, “us”). Protecting
-          your privacy is extremely important to us. This policy explains how
-          your information is collected, used, stored, and safeguarded when
-          using our services.
+          Welcome to{" "}
+          <strong>
+            {settings.websiteName?.trim() ? (
+              settings.websiteName
+            ) : (
+              <span className="inline-flex items-center gap-1">
+                <span className="w-2 h-2 bg-black rounded-full animate-bounce"></span>
+                <span
+                  className="w-2 h-2 bg-black rounded-full animate-bounce"
+                  style={{ animationDelay: "0.15s" }}
+                />
+                <span
+                  className="w-2 h-2 bg-black rounded-full animate-bounce"
+                  style={{ animationDelay: "0.3s" }}
+                />
+              </span>
+            )}
+          </strong>{" "}
+          (“we”, “our”, “us”). Protecting your privacy is extremely important to
+          us. This policy explains how your information is collected, used,
+          stored, and safeguarded when using our services.
         </p>
 
         {/* 1 */}
@@ -82,7 +123,26 @@ const PrivacyPolicy = () => {
         <p className="text-gray-600">
           For privacy-related concerns or questions, contact:
         </p>
-        <p className="text-gray-800 font-semibold mb-2">Email: trendzone033@gmail.com</p>
+        <p className="text-gray-800 font-semibold mb-2 flex items-center gap-1">
+          Email:
+          {settings.email?.trim() ? (
+            <a href={`mailto:${settings.email}`} className="underline">
+              {settings.email}
+            </a>
+          ) : (
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
+              <span
+                className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                style={{ animationDelay: "0.15s" }}
+              />
+              <span
+                className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                style={{ animationDelay: "0.3s" }}
+              />
+            </span>
+          )}
+        </p>
       </div>
     </div>
   );

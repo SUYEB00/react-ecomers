@@ -1,6 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 const TermsOfUse = () => {
+  const [settings, setSettings] = useState({
+    websiteName: "",
+    email: "",
+  });
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const docSnap = await getDoc(doc(db, "Settings", "Website"));
+
+        if (docSnap.exists()) {
+          setSettings(docSnap.data());
+        }
+      } catch (error) {
+        console.error("Failed to load settings:", error);
+      }
+    };
+
+    fetchSettings();
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#FDFDFE] py-10 px-4 md:px-16 font-sans">
       <div className="max-w-5xl mx-auto bg-white rounded-xl shadow-md p-8 md:p-12">
@@ -14,9 +37,26 @@ const TermsOfUse = () => {
 
         {/* Intro */}
         <p className="text-gray-600 mb-6">
-          Welcome to <strong>TrendZone</strong>. By accessing or purchasing from
-          our platform, you agree to the Terms & Conditions outlined below.
-          Please read them carefully.
+          Welcome to{" "}
+          <strong>
+            {settings.websiteName?.trim() ? (
+              settings.websiteName
+            ) : (
+              <span className="inline-flex items-center gap-1">
+                <span className="w-2 h-2 bg-black rounded-full animate-bounce"></span>
+                <span
+                  className="w-2 h-2 bg-black rounded-full animate-bounce"
+                  style={{ animationDelay: "0.15s" }}
+                />
+                <span
+                  className="w-2 h-2 bg-black rounded-full animate-bounce"
+                  style={{ animationDelay: "0.3s" }}
+                />
+              </span>
+            )}
+          </strong>
+          . By accessing or purchasing from our platform, you agree to the Terms
+          & Conditions outlined below. Please read them carefully.
         </p>
 
         {/* 1 */}
@@ -92,8 +132,25 @@ const TermsOfUse = () => {
           7. Limitation of Liability
         </h2>
         <p className="text-gray-600 mb-6">
-          TrendZone is not responsible for courier delays, misuse of products,
-          technical errors, or unauthorized account access.
+          <strong>
+            {settings.websiteName?.trim() ? (
+              settings.websiteName
+            ) : (
+              <span className="inline-flex items-center gap-1">
+                <span className="w-2 h-2 bg-black rounded-full animate-bounce"></span>
+                <span
+                  className="w-2 h-2 bg-black rounded-full animate-bounce"
+                  style={{ animationDelay: "0.15s" }}
+                />
+                <span
+                  className="w-2 h-2 bg-black rounded-full animate-bounce"
+                  style={{ animationDelay: "0.3s" }}
+                />
+              </span>
+            )}
+          </strong>{" "}
+          is not responsible for courier delays, misuse of products, technical
+          errors, or unauthorized account access.
         </p>
 
         {/* 8 */}
@@ -101,8 +158,25 @@ const TermsOfUse = () => {
           8. Intellectual Property
         </h2>
         <p className="text-gray-600 mb-6">
-          All images, branding, logos, and content belong to TrendZone. Reuse
-          without written permission is prohibited.
+          All images, branding, logos, and content belong to{" "}
+          <strong>
+            {settings.websiteName?.trim() ? (
+              settings.websiteName
+            ) : (
+              <span className="inline-flex items-center gap-1">
+                <span className="w-2 h-2 bg-black rounded-full animate-bounce"></span>
+                <span
+                  className="w-2 h-2 bg-black rounded-full animate-bounce"
+                  style={{ animationDelay: "0.15s" }}
+                />
+                <span
+                  className="w-2 h-2 bg-black rounded-full animate-bounce"
+                  style={{ animationDelay: "0.3s" }}
+                />
+              </span>
+            )}
+          </strong>
+          . Reuse without written permission is prohibited.
         </p>
 
         {/* 9 */}
@@ -112,7 +186,26 @@ const TermsOfUse = () => {
         <p className="text-gray-600 mb-1">
           For any questions or help, reach us:
         </p>
-        <p className="text-gray-700 font-semibold">Email: trendzone033@gmail.com</p>
+        <p className="text-gray-800 font-semibold mb-2 flex items-center gap-1">
+          Email:
+          {settings.email?.trim() ? (
+            <a href={`mailto:${settings.email}`} className="underline">
+              {settings.email}
+            </a>
+          ) : (
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
+              <span
+                className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                style={{ animationDelay: "0.15s" }}
+              />
+              <span
+                className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                style={{ animationDelay: "0.3s" }}
+              />
+            </span>
+          )}
+        </p>
       </div>
     </div>
   );

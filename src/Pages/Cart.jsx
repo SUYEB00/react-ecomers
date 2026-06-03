@@ -25,7 +25,7 @@ export default function Cart() {
 
   const subtotal = displayItems.reduce(
     (total, item) => total + Number(item.newprice) * item.quantity,
-    0
+    0,
   );
 
   if (displayItems.length === 0) {
