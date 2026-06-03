@@ -5,7 +5,6 @@ import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
-  sendPasswordResetEmail,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
@@ -72,7 +71,16 @@ export default function Login() {
     }
 
     try {
-      await sendPasswordResetEmail(auth, email);
+      const res = await fetch("/api/reset-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!res.ok) throw new Error();
+
       toast.success("Password reset email sent.");
     } catch (err) {
       toast.error("Failed to send reset email.");
