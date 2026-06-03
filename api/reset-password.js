@@ -27,7 +27,7 @@ export default async function handler(req, res) {
     });
 
     await transporter.sendMail({
-      from: "TrendZone <support@trendzone.live>",
+      from: "TrendZone <trendzone033@gmail.com>",
       to: email,
       subject: "Reset Your TrendZone Password",
       html: `
